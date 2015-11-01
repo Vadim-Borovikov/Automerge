@@ -1,6 +1,6 @@
-﻿namespace Automerger
+﻿namespace Automerger.View
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
