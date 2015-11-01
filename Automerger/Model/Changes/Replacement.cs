@@ -12,10 +12,10 @@ namespace Automerger.Model
 
         public string[] NewContent { get { return _addition.Content; } }
 
-        public Replacement(int line, string[] newContent, int removedLines) : base(line)
+        public Replacement(int line, string[] newContent, int removedLinesAmount) : base(line)
         {
             _addition = new Addition(line, newContent);
-            _removal = new Removal(line, removedLines);
+            _removal = new Removal(line, removedLinesAmount);
         }
 
         private readonly Addition _addition;
