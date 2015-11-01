@@ -51,10 +51,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Model\Changes\AdditionTests.cs" />
-    <Compile Include="Model\Changes\ChangeSetTests.cs" />
-    <Compile Include="Model\Changes\RemovalTests.cs" />
-    <Compile Include="Model\Changes\ReplacementTests.cs" />
+    <Compile Include="Model\AdditionTests.cs" />
+    <Compile Include="Model\ChangeSetTests.cs" />
+    <Compile Include="Model\RemovalTests.cs" />
+    <Compile Include="Model\ReplacementTests.cs" />
     <Compile Include="MyAssert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
