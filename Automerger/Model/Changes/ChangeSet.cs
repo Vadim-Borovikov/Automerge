@@ -48,8 +48,8 @@ namespace Automerger.Model
                     continue;
                 }
 
-                int nextSameInSource = -1;
-                int nextSameInChanged = -1;
+                int nextSameInSource = source.Length;
+                int nextSameInChanged = changed.Length;
                 for (int i1 = i; i1 < source.Length; ++i1)
                 {
                     for (int j1 = j; j1 < changed.Length; ++j1)
@@ -58,7 +58,12 @@ namespace Automerger.Model
                         {
                             nextSameInSource = i1;
                             nextSameInChanged = j1;
+                            break;
                         }
+                    }
+                    if (nextSameInSource < source.Length)
+                    {
+                        break;
                     }
                 }
 
@@ -75,23 +80,32 @@ namespace Automerger.Model
                 {
                     removedLinesAmount = nextSameInSource - i;
                     Changes.Add(new Removal(i, removedLinesAmount));
-                    i = nextSameInChanged + 1;
+                    i = nextSameInSource + 1;
                     ++j;
                     continue;
-                }
-
-                if (nextSameInSource == -1)
-                {
-                    nextSameInSource = source.Length;
-                    nextSameInChanged = changed.Length;
                 }
 
                 removedLinesAmount = nextSameInSource - i;
                 newContent = GetSubArray(changed, j, nextSameInChanged - 1);
                 Changes.Add(new Replacement(i, newContent, removedLinesAmount));
-                i = nextSameInChanged + 1;
+                i = nextSameInSource + 1;
                 j = nextSameInChanged + 1;
             }
+
+            if (i >= source.Length)
+            {
+                if (j >= changed.Length)
+                {
+                    return;
+                }
+
+                newContent = GetSubArray(changed, j, changed.Length - 1);
+                Changes.Add(new Addition(source.Length, newContent));
+                return;
+            }
+
+            removedLinesAmount = source.Length - i;
+            Changes.Add(new Removal(i, removedLinesAmount));
         }
 
         private static bool AreSame(string a, string b) { return a.Trim().Equals(b.Trim()); }
