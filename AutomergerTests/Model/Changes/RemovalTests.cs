@@ -16,14 +16,12 @@ namespace Automerger.Model.Tests
         public void RemovalTest()
         {
             MyAssert.Throws<ArgumentException>(() => new Removal(-1, 1));
-            MyAssert.Throws<ArgumentException>(() => new Removal(0, 1));
 
             MyAssert.Throws<ArgumentException>(() => new Removal(1, -1));
-            MyAssert.Throws<ArgumentException>(() => new Removal(1, 0));
 
-            var removal = new Removal(1, 1);
+            var removal = new Removal(0, 1);
 
-            Assert.IsTrue(removal.Line == 1);
+            Assert.IsTrue(removal.Line == 0);
             Assert.IsTrue(removal.LinesAmount == 1);
         }
     }

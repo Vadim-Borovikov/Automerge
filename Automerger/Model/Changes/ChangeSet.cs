@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Automerger.Model
 {
-    class ChangesSet
+    public class ChangeSet
     {
         public readonly List<Change> Changes = new List<Change>();
 
-        public ChangesSet(string[] source, string[] changed)
+        public ChangeSet(string[] source, string[] changed)
         {
             if ((source == null) || (changed == null))
             {

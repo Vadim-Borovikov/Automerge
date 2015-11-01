@@ -18,9 +18,8 @@ namespace Automerger.Model.Tests
             string[] content = new string[1] { "Test" };
 
             MyAssert.Throws<ArgumentException>(() => new Addition(-1, content));
-            MyAssert.Throws<ArgumentException>(() => new Addition(0, content));
 
-            MyAssert.Throws<ArgumentNullException>(() => new Addition(1, null));
+            MyAssert.Throws<ArgumentNullException>(() => new Addition(0, null));
 
             var addition = new Addition(1, content);
 

@@ -13,7 +13,7 @@ namespace Automerger.Model
 
         protected Change(int line)
         {
-            if (line < 1)
+            if (line < 0)
             {
                 throw new ArgumentException();
             }

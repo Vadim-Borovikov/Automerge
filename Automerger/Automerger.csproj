@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Model\Changes\Addition.cs" />
     <Compile Include="Model\Changes\Change.cs" />
-    <Compile Include="Model\Changes\ChangesSet.cs" />
+    <Compile Include="Model\Changes\ChangeSet.cs" />
     <Compile Include="Model\Changes\Removal.cs" />
     <Compile Include="Model\Changes\Replacement.cs" />
     <Compile Include="View\MainForm.cs">
