@@ -18,7 +18,6 @@ namespace Automerger.Model.Tests
 
             Assert.IsTrue(removal.Start == 0);
             Assert.IsTrue(removal.RemovedAmount == 1);
-            Assert.IsTrue(removal.Finish == 1);
         }
     }
 }

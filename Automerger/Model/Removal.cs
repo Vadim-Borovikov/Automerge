@@ -2,7 +2,7 @@
 
 namespace Automerger.Model
 {
-    public class Removal : Change
+    public class Removal : Change, IMergableChange
     {
         public Removal(int start, int amount) : base(start, amount, new string[0])
         {

@@ -52,7 +52,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Model\AdditionTests.cs" />
-    <Compile Include="Model\ChangeSetTests.cs" />
+    <Compile Include="Model\ChangeSetApplyerTests.cs" />
+    <Compile Include="Model\ChangeSetGeneratorTests.cs" />
     <Compile Include="Model\ConflictTests.cs" />
     <Compile Include="Model\RemovalTests.cs" />
     <Compile Include="Model\ReplacementTests.cs" />

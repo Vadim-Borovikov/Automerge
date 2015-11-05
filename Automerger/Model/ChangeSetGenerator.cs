@@ -3,20 +3,10 @@ using System.Collections.Generic;
 
 namespace Automerger.Model
 {
-    public class ChangeSet
+    public static class ChangeSetGenerator
     {
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
-
-        #region Changes themselves
-        public IReadOnlyDictionary<int, Change> Changes { get { return _changes; } }
-        #endregion
-
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
-
         #region Creation
-        public ChangeSet(string[] source, string[] changed)
+        public static Dictionary<int, IMergableChange> Generate(string[] source, string[] changed)
         {
             if ((source == null) || (changed == null))
             {
@@ -25,8 +15,11 @@ namespace Automerger.Model
 
             _source = source;
             _changed = changed;
+            _changes = new Dictionary<int, IMergableChange>();
 
             AddChanges();
+
+            return _changes;
         }
         #endregion
 
@@ -34,7 +27,7 @@ namespace Automerger.Model
         //////////////////////////////////////////////////////////////////////////////////////
 
         #region Scanning & comparing
-        private void AddChanges()
+        private static void AddChanges()
         {
             if (_source.Length == 0)
             {
@@ -102,8 +95,8 @@ namespace Automerger.Model
         //////////////////////////////////////////////////////////////////////////////////////
 
         #region Helpers
-        private void FindNextSame(int startLineInSource, int startLineInChanges,
-                                  out int nextSameInSource, out int nextSameInChanged)
+        private static void FindNextSame(int startLineInSource, int startLineInChanges,
+                                         out int nextSameInSource, out int nextSameInChanged)
         {
             nextSameInSource = _source.Length;
             nextSameInChanged = _changed.Length;
@@ -121,19 +114,19 @@ namespace Automerger.Model
             }
         }
 
-        private void AddAddition(int dest, int start, int finish)
+        private static void AddAddition(int dest, int start, int finish)
         {
             string[] content = GetSubArray(_changed, start, finish - 1);
             _changes.Add(dest, new Addition(dest, content));
         }
 
-        private void AddRemoval(int start, int finish)
+        private static void AddRemoval(int start, int finish)
         {
             int amount = finish - start;
             _changes.Add(start, new Removal(start, amount));
         }
 
-        private void AddReplacement(int removalStart, int removalFinish,
+        private static void AddReplacement(int removalStart, int removalFinish,
                                     int additionStart, int additionFinish)
         {
             int removedAmount = removalFinish - removalStart;
@@ -156,9 +149,9 @@ namespace Automerger.Model
         //////////////////////////////////////////////////////////////////////////////////////
 
         #region Members
-        private string[] _source;
-        private string[] _changed;
-        public readonly Dictionary<int, Change> _changes = new Dictionary<int, Change>();
+        private static string[] _source;
+        private static string[] _changed;
+        private static Dictionary<int, IMergableChange> _changes;
         #endregion
 
         //////////////////////////////////////////////////////////////////////////////////////

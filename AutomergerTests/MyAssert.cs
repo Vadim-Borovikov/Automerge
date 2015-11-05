@@ -17,5 +17,17 @@ namespace AutomergerTests
                 Assert.IsInstanceOfType(e, typeof(T));
             }
         }
+
+        public static void ThrowsNothing(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch
+            {
+                Assert.Fail();
+            }
+        }
     }
 }

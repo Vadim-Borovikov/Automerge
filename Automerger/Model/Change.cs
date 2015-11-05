@@ -3,17 +3,15 @@ using System.Collections.Generic;
 
 namespace Automerger.Model
 {
-    public abstract class Change
+    public abstract class Change : IChange
     {
         //////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////
 
         #region Common members and properties
-        public int Start;
-        public readonly int RemovedAmount;
+        public int Start { get; private set; }
+        public int RemovedAmount { get; private set; }
         public IReadOnlyList<string> NewContent { get { return _newContent.AsReadOnly(); } }
-
-        public int Finish { get { return Start + RemovedAmount; } }
         #endregion
 
         //////////////////////////////////////////////////////////////////////////////////////
