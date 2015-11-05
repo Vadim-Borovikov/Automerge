@@ -1,5 +1,4 @@
-﻿using Automerger.Model;
-using AutomergerTests;
+﻿using AutomergerTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

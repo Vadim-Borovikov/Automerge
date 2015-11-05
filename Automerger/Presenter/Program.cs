@@ -13,7 +13,12 @@ namespace Automerger.Presenter
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new View.MainForm());
+
+            Model.IChangeSetMerger merger = new Model.DummyMerger();
+            var form = new View.MainForm();
+            var presenter = new Presenter(merger, form);
+
+            Application.Run(form);
         }
     }
 }

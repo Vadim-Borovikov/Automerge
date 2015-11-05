@@ -51,14 +51,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Model\AdditionTests.cs" />
-    <Compile Include="Model\ChangeSetApplyerTests.cs" />
-    <Compile Include="Model\ChangeSetGeneratorTests.cs" />
-    <Compile Include="Model\ConflictTests.cs" />
-    <Compile Include="Model\RemovalTests.cs" />
-    <Compile Include="Model\ReplacementTests.cs" />
+    <Compile Include="Model\Changes\AdditionTests.cs" />
+    <Compile Include="Model\ChangeSets\ChangeSetApplyerTests.cs" />
+    <Compile Include="Model\ChangeSets\ChangeSetGeneratorTests.cs" />
+    <Compile Include="Model\Changes\ConflictTests.cs" />
+    <Compile Include="Model\Changes\RemovalTests.cs" />
+    <Compile Include="Model\Changes\ReplacementTests.cs" />
     <Compile Include="MyAssert.cs" />
+    <Compile Include="Presenter\PresenterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\DummyView.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Automerger\Automerger.csproj">
@@ -66,6 +68,7 @@
       <Name>Automerger</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

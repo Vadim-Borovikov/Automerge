@@ -46,15 +46,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Addition.cs" />
-    <Compile Include="Model\Change.cs" />
-    <Compile Include="Model\ChangeSetApplyer.cs" />
-    <Compile Include="Model\ChangeSetGenerator.cs" />
-    <Compile Include="Model\Conflict.cs" />
-    <Compile Include="Model\IChange.cs" />
-    <Compile Include="Model\IMergableChange.cs" />
-    <Compile Include="Model\Removal.cs" />
-    <Compile Include="Model\Replacement.cs" />
+    <Compile Include="Model\ChangeSetsMergers\IChangeSetMerger.cs" />
+    <Compile Include="Model\Changes\Addition.cs" />
+    <Compile Include="Model\Changes\Change.cs" />
+    <Compile Include="Model\ChangeSets\ChangeSetApplyer.cs" />
+    <Compile Include="Model\ChangeSets\ChangeSetGenerator.cs" />
+    <Compile Include="Model\Changes\Conflict.cs" />
+    <Compile Include="Model\Changes\IChange.cs" />
+    <Compile Include="Model\Changes\IMergableChange.cs" />
+    <Compile Include="Model\Changes\Removal.cs" />
+    <Compile Include="Model\Changes\Replacement.cs" />
+    <Compile Include="Model\ChangeSetsMergers\DummyMerger.cs" />
+    <Compile Include="Presenter\Presenter.cs" />
+    <Compile Include="View\IView.cs" />
     <Compile Include="View\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,6 +76,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="View\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
