@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Automerger.Model
 {
     public class ChangeSet
     {
-        public IReadOnlyDictionary<int, Change> Changes { get { return _changes; } }
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
 
+        #region Changes themselves
+        public IReadOnlyDictionary<int, Change> Changes { get { return _changes; } }
+        #endregion
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        #region Creation
         public ChangeSet(string[] source, string[] changed)
         {
             if ((source == null) || (changed == null))
@@ -22,7 +28,12 @@ namespace Automerger.Model
 
             AddChanges();
         }
+        #endregion
 
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        #region Scanning & comparing
         private void AddChanges()
         {
             if (_source.Length == 0)
@@ -85,7 +96,12 @@ namespace Automerger.Model
                 AddRemoval(i, _source.Length);
             }
         }
+        #endregion
 
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        #region Helpers
         private void FindNextSame(int startLineInSource, int startLineInChanges,
                                   out int nextSameInSource, out int nextSameInChanged)
         {
@@ -134,9 +150,18 @@ namespace Automerger.Model
             Array.Copy(source, left, result, 0, length);
             return result;
         }
+        #endregion
 
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        #region Members
         private string[] _source;
         private string[] _changed;
         public readonly Dictionary<int, Change> _changes = new Dictionary<int, Change>();
+        #endregion
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
     }
 }

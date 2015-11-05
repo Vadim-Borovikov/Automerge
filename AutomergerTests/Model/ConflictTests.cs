@@ -1,8 +1,6 @@
 ﻿using AutomergerTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Automerger.Model.Tests

@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Automerger.Model
 {
     public class Conflict
     {
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        #region Common members
         public readonly int Start;
         public readonly int RemovedAmount;
         public IReadOnlyList<string> NewContent1;
         public IReadOnlyList<string> NewContent2;
+        #endregion
 
-        public Conflict(int start, int removedAmount,
-                        string[] newContent1, string[] newContent2)
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        #region Creation
+        public Conflict(int start, int removedAmount, string[] newContent1, string[] newContent2)
         {
             if ((start < 0) || (removedAmount < 1))
             {
@@ -34,5 +39,9 @@ namespace Automerger.Model
             NewContent1 = (new List<string>(newContent1)).AsReadOnly();
             NewContent2 = (new List<string>(newContent2)).AsReadOnly();
         }
+        #endregion
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
     }
 }
