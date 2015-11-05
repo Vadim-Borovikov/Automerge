@@ -8,16 +8,13 @@ namespace Automerger.Model
 {
     public class Replacement : Change
     {
-        public override int RemovedAmount { get { return _removal.RemovedAmount; } }
-        public override string[] NewContent { get { return _addition.NewContent; } }
-
-        public Replacement(int line, string[] newContent, int removedLinesAmount) : base(line)
+        public Replacement(int start, int removedAmount, string[] newContent)
+            : base(start, removedAmount, newContent)
         {
-            _addition = new Addition(line, newContent);
-            _removal = new Removal(line, removedLinesAmount);
+            if (removedAmount < 1)
+            {
+                throw new ArgumentException();
+            }
         }
-
-        private readonly Addition _addition;
-        private readonly Removal _removal;
     }
 }

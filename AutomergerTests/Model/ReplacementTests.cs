@@ -1,6 +1,7 @@
 ﻿using AutomergerTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 
 namespace Automerger.Model.Tests
 {
@@ -12,19 +13,19 @@ namespace Automerger.Model.Tests
         {
             string[] content = new string[1] { "Test" };
 
-            MyAssert.Throws<ArgumentException>(() => new Replacement(-1, content, 1));
+            MyAssert.Throws<ArgumentException>(() => new Replacement(-1, 1, content));
 
-            MyAssert.Throws<ArgumentNullException>(() => new Replacement(1, null, 1));
+            MyAssert.Throws<ArgumentException>(() => new Replacement(1, -1, content));
+            MyAssert.Throws<ArgumentException>(() => new Replacement(1, 0, content));
 
-            MyAssert.Throws<ArgumentException>(() => new Replacement(1, content, -1));
-            MyAssert.Throws<ArgumentException>(() => new Replacement(1, content, 0));
+            MyAssert.Throws<ArgumentNullException>(() => new Replacement(1, 1, null));
 
-            var replacement = new Replacement(0, content, 1);
+            var replacement = new Replacement(0, 1, content);
 
             Assert.IsTrue(replacement.Start == 0);
             Assert.IsTrue(replacement.RemovedAmount == 1);
             Assert.IsTrue(replacement.Finish == 1);
-            CollectionAssert.AreEqual(content, replacement.NewContent);
+            Assert.IsTrue(content.SequenceEqual(replacement.NewContent));
         }
     }
 }

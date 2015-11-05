@@ -10,8 +10,8 @@ namespace Automerger.Model
     {
         public readonly int Start;
         public readonly int RemovedAmount;
-        public readonly string[] NewContent1;
-        public readonly string[] NewContent2;
+        public IReadOnlyList<string> NewContent1;
+        public IReadOnlyList<string> NewContent2;
 
         public Conflict(int start, int removedAmount,
                         string[] newContent1, string[] newContent2)
@@ -31,8 +31,8 @@ namespace Automerger.Model
 
             Start = start;
             RemovedAmount = removedAmount;
-            NewContent1 = newContent1;
-            NewContent2 = newContent2;
+            NewContent1 = (new List<string>(newContent1)).AsReadOnly();
+            NewContent2 = (new List<string>(newContent2)).AsReadOnly();
         }
     }
 }

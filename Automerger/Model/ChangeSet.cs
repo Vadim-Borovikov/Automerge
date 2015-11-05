@@ -8,7 +8,7 @@ namespace Automerger.Model
 {
     public class ChangeSet
     {
-        public readonly Dictionary<int, Change> Changes = new Dictionary<int, Change>();
+        public IReadOnlyDictionary<int, Change> Changes { get { return _changes; } }
 
         public ChangeSet(string[] source, string[] changed)
         {
@@ -32,13 +32,13 @@ namespace Automerger.Model
                     return;
                 }
 
-                Changes.Add(0, new Addition(0, _changed));
+                _changes.Add(0, new Addition(0, _changed));
                 return;
             }
 
             if (_changed.Length == 0)
             {
-                Changes.Add(0, new Removal(0, _source.Length));
+                _changes.Add(0, new Removal(0, _source.Length));
                 return;
             }
 
@@ -108,22 +108,21 @@ namespace Automerger.Model
         private void AddAddition(int dest, int start, int finish)
         {
             string[] content = GetSubArray(_changed, start, finish - 1);
-            Changes.Add(dest, new Addition(dest, content));
+            _changes.Add(dest, new Addition(dest, content));
         }
 
         private void AddRemoval(int start, int finish)
         {
             int amount = finish - start;
-            Changes.Add(start, new Removal(start, amount));
+            _changes.Add(start, new Removal(start, amount));
         }
 
         private void AddReplacement(int removalStart, int removalFinish,
                                     int additionStart, int additionFinish)
         {
-            int removedLinesAmount = removalFinish - removalStart;
+            int removedAmount = removalFinish - removalStart;
             string[] newContent = GetSubArray(_changed, additionStart, additionFinish - 1);
-            Changes.Add(removalStart,
-                new Replacement(removalStart, newContent, removedLinesAmount));
+            _changes.Add(removalStart, new Replacement(removalStart, removedAmount, newContent));
         }
 
         private static bool AreSame(string a, string b) { return a.Trim().Equals(b.Trim()); }
@@ -138,5 +137,6 @@ namespace Automerger.Model
 
         private string[] _source;
         private string[] _changed;
+        public readonly Dictionary<int, Change> _changes = new Dictionary<int, Change>();
     }
 }

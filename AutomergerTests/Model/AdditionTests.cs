@@ -1,6 +1,7 @@
 ﻿using AutomergerTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 
 namespace Automerger.Model.Tests
 {
@@ -21,7 +22,7 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(addition.Start == 1);
             Assert.IsTrue(addition.RemovedAmount == 0);
             Assert.IsTrue(addition.Finish == 1);
-            CollectionAssert.AreEqual(content, addition.NewContent);
+            Assert.IsTrue(content.SequenceEqual(addition.NewContent));
         }
     }
 }

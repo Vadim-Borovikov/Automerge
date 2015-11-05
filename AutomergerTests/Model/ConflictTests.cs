@@ -1,6 +1,9 @@
 ﻿using AutomergerTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Automerger.Model.Tests
 {
@@ -23,8 +26,8 @@ namespace Automerger.Model.Tests
 
             Assert.IsTrue(conflict.Start == 0);
             Assert.IsTrue(conflict.RemovedAmount == 1);
-            CollectionAssert.AreEqual(content1, conflict.NewContent1);
-            CollectionAssert.AreEqual(content2, conflict.NewContent2);
+            Assert.IsTrue(content1.SequenceEqual(conflict.NewContent1));
+            Assert.IsTrue(content2.SequenceEqual(conflict.NewContent2));
         }
     }
 }
