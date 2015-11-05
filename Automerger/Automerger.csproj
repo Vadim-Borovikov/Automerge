@@ -49,6 +49,7 @@
     <Compile Include="Model\Addition.cs" />
     <Compile Include="Model\Change.cs" />
     <Compile Include="Model\ChangeSet.cs" />
+    <Compile Include="Model\Conflict.cs" />
     <Compile Include="Model\Removal.cs" />
     <Compile Include="Model\Replacement.cs" />
     <Compile Include="View\MainForm.cs">
