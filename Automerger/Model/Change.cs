@@ -8,16 +8,19 @@ namespace Automerger.Model
 {
     public abstract class Change
     {
-        public readonly int Line;
-        public abstract int LinesAmount { get; }
+        public readonly int Start;
+        public virtual int RemovedAmount { get { return 0; } }
+        public virtual string[] NewContent { get { return new string[0]; } }
 
-        protected Change(int line)
+        public int Finish { get { return Start + RemovedAmount; } }
+
+        protected Change(int start)
         {
-            if (line < 0)
+            if (start < 0)
             {
                 throw new ArgumentException();
             }
-            Line = line;
+            Start = start;
         }
     }
 }

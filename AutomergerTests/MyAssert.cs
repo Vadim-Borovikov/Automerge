@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Authomerger.Tests
+namespace AutomergerTests
 {
     public static class MyAssert
     {

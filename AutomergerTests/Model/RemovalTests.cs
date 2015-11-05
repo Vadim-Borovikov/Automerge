@@ -1,11 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Automerger.Model;
+﻿using AutomergerTests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Authomerger.Tests;
 
 namespace Automerger.Model.Tests
 {
@@ -21,8 +16,9 @@ namespace Automerger.Model.Tests
 
             var removal = new Removal(0, 1);
 
-            Assert.IsTrue(removal.Line == 0);
-            Assert.IsTrue(removal.LinesAmount == 1);
+            Assert.IsTrue(removal.Start == 0);
+            Assert.IsTrue(removal.RemovedAmount == 1);
+            Assert.IsTrue(removal.Finish == 1);
         }
     }
 }

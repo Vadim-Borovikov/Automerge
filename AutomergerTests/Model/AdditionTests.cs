@@ -1,11 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Automerger.Model;
+﻿using AutomergerTests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Authomerger.Tests;
 
 namespace Automerger.Model.Tests
 {
@@ -23,9 +18,10 @@ namespace Automerger.Model.Tests
 
             var addition = new Addition(1, content);
 
-            Assert.IsTrue(addition.Line == 1);
-            Assert.IsTrue(addition.LinesAmount == 0);
-            CollectionAssert.AreEqual(content, addition.Content);
+            Assert.IsTrue(addition.Start == 1);
+            Assert.IsTrue(addition.RemovedAmount == 0);
+            Assert.IsTrue(addition.Finish == 1);
+            CollectionAssert.AreEqual(content, addition.NewContent);
         }
     }
 }

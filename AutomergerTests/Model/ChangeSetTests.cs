@@ -1,11 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Automerger.Model;
+﻿using AutomergerTests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Authomerger.Tests;
 
 namespace Automerger.Model.Tests
 {
@@ -29,30 +25,33 @@ namespace Automerger.Model.Tests
             changed = new string[1] { "Test" };
             set = new ChangeSet(source, changed);
             Assert.IsTrue(set.Changes.Count == 1);
-            Addition addition = set.Changes[0] as Addition;
+            var addition = set.Changes[0] as Addition;
             Assert.IsNotNull(addition);
-            Assert.IsTrue(addition.Line == 0);
-            Assert.IsTrue(addition.LinesAmount == 0);
-            Assert.IsTrue(addition.Content.SequenceEqual(changed));
+            Assert.IsTrue(addition.Start == 0);
+            Assert.IsTrue(addition.RemovedAmount == 0);
+            Assert.IsTrue(addition.Finish == 0);
+            Assert.IsTrue(addition.NewContent.SequenceEqual(changed));
 
             // Simple removal
             source = new string[1] { "Test" };
             changed = new string[0];
             set = new ChangeSet(source, changed);
             Assert.IsTrue(set.Changes.Count == 1);
-            Removal removal = set.Changes[0] as Removal;
+            var removal = set.Changes[0] as Removal;
             Assert.IsNotNull(removal);
-            Assert.IsTrue(removal.Line == 0);
-            Assert.IsTrue(removal.LinesAmount == 1);
+            Assert.IsTrue(removal.Start == 0);
+            Assert.IsTrue(removal.RemovedAmount == 1);
+            Assert.IsTrue(removal.Finish == 1);
 
             // Simple replacement
             changed = new string[1] { "Test2" };
             set = new ChangeSet(source, changed);
             Assert.IsTrue(set.Changes.Count == 1);
-            Replacement replacement = set.Changes[0] as Replacement;
+            var replacement = set.Changes[0] as Replacement;
             Assert.IsNotNull(replacement);
-            Assert.IsTrue(replacement.Line == 0);
-            Assert.IsTrue(replacement.LinesAmount == 1);
+            Assert.IsTrue(replacement.Start == 0);
+            Assert.IsTrue(replacement.RemovedAmount == 1);
+            Assert.IsTrue(replacement.Finish == 1);
             Assert.IsTrue(replacement.NewContent.SequenceEqual(changed));
 
             // Trimming
@@ -68,17 +67,20 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(set.Changes.Count == 3);
             addition = set.Changes[0] as Addition;
             Assert.IsNotNull(addition);
-            Assert.IsTrue(addition.Line == 0);
-            Assert.IsTrue(addition.LinesAmount == 0);
-            Assert.IsTrue(addition.Content.SequenceEqual(new string[1] { "0" }));
+            Assert.IsTrue(addition.Start == 0);
+            Assert.IsTrue(addition.RemovedAmount == 0);
+            Assert.IsTrue(addition.Finish == 0);
+            Assert.IsTrue(addition.NewContent.SequenceEqual(new string[1] { "0" }));
             removal = set.Changes[1] as Removal;
             Assert.IsNotNull(removal);
-            Assert.IsTrue(removal.Line == 1);
-            Assert.IsTrue(removal.LinesAmount == 1);
-            replacement = set.Changes[2] as Replacement;
+            Assert.IsTrue(removal.Start == 1);
+            Assert.IsTrue(removal.RemovedAmount == 1);
+            Assert.IsTrue(removal.Finish == 2);
+            replacement = set.Changes[3] as Replacement;
             Assert.IsNotNull(replacement);
-            Assert.IsTrue(replacement.Line == 3);
-            Assert.IsTrue(replacement.LinesAmount == 1);
+            Assert.IsTrue(replacement.Start == 3);
+            Assert.IsTrue(replacement.RemovedAmount == 1);
+            Assert.IsTrue(replacement.Finish == 4);
             Assert.IsTrue(replacement.NewContent.SequenceEqual(new string[2] { "5", "6" }));
 
             // Removal - replacement - addition
@@ -88,18 +90,21 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(set.Changes.Count == 3);
             removal = set.Changes[0] as Removal;
             Assert.IsNotNull(removal);
-            Assert.IsTrue(removal.Line == 0);
-            Assert.IsTrue(removal.LinesAmount == 1);
-            replacement = set.Changes[1] as Replacement;
+            Assert.IsTrue(removal.Start == 0);
+            Assert.IsTrue(removal.RemovedAmount == 1);
+            Assert.IsTrue(removal.Finish == 1);
+            replacement = set.Changes[2] as Replacement;
             Assert.IsNotNull(replacement);
-            Assert.IsTrue(replacement.Line == 2);
-            Assert.IsTrue(replacement.LinesAmount == 1);
+            Assert.IsTrue(replacement.Start == 2);
+            Assert.IsTrue(replacement.RemovedAmount == 1);
+            Assert.IsTrue(replacement.Finish == 3);
             Assert.IsTrue(replacement.NewContent.SequenceEqual(new string[1] { "5" }));
-            addition = set.Changes[2] as Addition;
+            addition = set.Changes[4] as Addition;
             Assert.IsNotNull(addition);
-            Assert.IsTrue(addition.Line == 4);
-            Assert.IsTrue(addition.LinesAmount == 0);
-            Assert.IsTrue(addition.Content.SequenceEqual(new string[2] { "6", "7" }));
+            Assert.IsTrue(addition.Start == 4);
+            Assert.IsTrue(addition.RemovedAmount == 0);
+            Assert.IsTrue(addition.Finish == 4);
+            Assert.IsTrue(addition.NewContent.SequenceEqual(new string[2] { "6", "7" }));
 
             // Replacement - addition - removal
             source  = new string[4] { "1", "2",      "3", "4" };
@@ -108,18 +113,21 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(set.Changes.Count == 3);
             replacement = set.Changes[0] as Replacement;
             Assert.IsNotNull(replacement);
-            Assert.IsTrue(replacement.Line == 0);
-            Assert.IsTrue(replacement.LinesAmount == 1);
+            Assert.IsTrue(replacement.Start == 0);
+            Assert.IsTrue(replacement.RemovedAmount == 1);
+            Assert.IsTrue(replacement.Finish == 1);
             Assert.IsTrue(replacement.NewContent.SequenceEqual(new string[1] { "5" }));
-            addition = set.Changes[1] as Addition;
+            addition = set.Changes[2] as Addition;
             Assert.IsNotNull(addition);
-            Assert.IsTrue(addition.Line == 2);
-            Assert.IsTrue(addition.LinesAmount == 0);
-            Assert.IsTrue(addition.Content.SequenceEqual(new string[1] { "6" }));
-            removal = set.Changes[2] as Removal;
+            Assert.IsTrue(addition.Start == 2);
+            Assert.IsTrue(addition.RemovedAmount == 0);
+            Assert.IsTrue(addition.Finish == 2);
+            Assert.IsTrue(addition.NewContent.SequenceEqual(new string[1] { "6" }));
+            removal = set.Changes[3] as Removal;
             Assert.IsNotNull(removal);
-            Assert.IsTrue(removal.Line == 3);
-            Assert.IsTrue(removal.LinesAmount == 1);
+            Assert.IsTrue(removal.Start == 3);
+            Assert.IsTrue(removal.RemovedAmount == 1);
+            Assert.IsTrue(removal.Finish == 4);
         }
     }
 }

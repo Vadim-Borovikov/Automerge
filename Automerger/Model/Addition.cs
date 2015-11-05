@@ -8,18 +8,18 @@ namespace Automerger.Model
 {
     public class Addition : Change
     {
-        public override int LinesAmount { get { return 0; } }
+        public override string[] NewContent { get { return _newContent; } }
 
-        public string[] Content;
-
-        public Addition(int line, string[] content) : base(line)
+        public Addition(int start, string[] newContent) : base(start)
         {
-            if (content == null)
+            if (newContent == null)
             {
                 throw new ArgumentNullException();
             }
 
-            Content = content;
+            _newContent = newContent;
         }
+
+        private string[] _newContent;
     }
 }

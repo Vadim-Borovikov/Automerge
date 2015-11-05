@@ -8,7 +8,7 @@ namespace Automerger.Model
 {
     public class ChangeSet
     {
-        public readonly List<Change> Changes = new List<Change>();
+        public readonly Dictionary<int, Change> Changes = new Dictionary<int, Change>();
 
         public ChangeSet(string[] source, string[] changed)
         {
@@ -17,95 +17,113 @@ namespace Automerger.Model
                 throw new ArgumentNullException();
             }
 
-            if (source.Length == 0)
+            _source = source;
+            _changed = changed;
+
+            AddChanges();
+        }
+
+        private void AddChanges()
+        {
+            if (_source.Length == 0)
             {
-                if (changed.Length == 0)
+                if (_changed.Length == 0)
                 {
                     return;
                 }
 
-                Changes.Add(new Addition(0, changed));
+                Changes.Add(0, new Addition(0, _changed));
                 return;
             }
 
-            if (changed.Length == 0)
+            if (_changed.Length == 0)
             {
-                Changes.Add(new Removal(0, source.Length));
+                Changes.Add(0, new Removal(0, _source.Length));
                 return;
             }
-
-            string[] newContent = null;
-            int removedLinesAmount = 0;
 
             int i = 0;
             int j = 0;
-            while ((i < source.Length) && (j < changed.Length))
+            for (; (i < _source.Length) && (j < _changed.Length); ++i, ++j)
             {
-                if (AreSame(source[i], changed[j]))
+                if (AreSame(_source[i], _changed[j]))
                 {
-                    ++i;
-                    ++j;
                     continue;
                 }
 
-                int nextSameInSource = source.Length;
-                int nextSameInChanged = changed.Length;
-                for (int i1 = i; i1 < source.Length; ++i1)
-                {
-                    for (int j1 = j; j1 < changed.Length; ++j1)
-                    {
-                        if (AreSame(source[i1], changed[j1]))
-                        {
-                            nextSameInSource = i1;
-                            nextSameInChanged = j1;
-                            break;
-                        }
-                    }
-                    if (nextSameInSource < source.Length)
-                    {
-                        break;
-                    }
-                }
+                int nextSameInSource;
+                int nextSameInChanged;
+                FindNextSame(i, j, out nextSameInSource, out nextSameInChanged);
 
                 if (nextSameInSource == i)
                 {
-                    newContent = GetSubArray(changed, j, nextSameInChanged - 1);
-                    Changes.Add(new Addition(i, newContent));
-                    ++i;
-                    j = nextSameInChanged + 1;
-                    continue;
+                    AddAddition(i, j, nextSameInChanged);
+                    j = nextSameInChanged;
                 }
-
-                if (nextSameInChanged == j)
+                else if (nextSameInChanged == j)
                 {
-                    removedLinesAmount = nextSameInSource - i;
-                    Changes.Add(new Removal(i, removedLinesAmount));
-                    i = nextSameInSource + 1;
-                    ++j;
-                    continue;
+                    AddRemoval(i, nextSameInSource);
+                    i = nextSameInSource;
                 }
-
-                removedLinesAmount = nextSameInSource - i;
-                newContent = GetSubArray(changed, j, nextSameInChanged - 1);
-                Changes.Add(new Replacement(i, newContent, removedLinesAmount));
-                i = nextSameInSource + 1;
-                j = nextSameInChanged + 1;
+                else
+                {
+                    AddReplacement(i, nextSameInSource, j, nextSameInChanged);
+                    i = nextSameInSource;
+                    j = nextSameInChanged;
+                }
             }
 
-            if (i >= source.Length)
+            if (i >= _source.Length)
             {
-                if (j >= changed.Length)
+                if (j < _changed.Length)
                 {
-                    return;
+                    AddAddition(_source.Length, j, _changed.Length);
                 }
-
-                newContent = GetSubArray(changed, j, changed.Length - 1);
-                Changes.Add(new Addition(source.Length, newContent));
-                return;
             }
+            else
+            {
+                AddRemoval(i, _source.Length);
+            }
+        }
 
-            removedLinesAmount = source.Length - i;
-            Changes.Add(new Removal(i, removedLinesAmount));
+        private void FindNextSame(int startLineInSource, int startLineInChanges,
+                                  out int nextSameInSource, out int nextSameInChanged)
+        {
+            nextSameInSource = _source.Length;
+            nextSameInChanged = _changed.Length;
+            for (int i = startLineInSource; i < _source.Length; ++i)
+            {
+                for (int j = startLineInChanges; j < _changed.Length; ++j)
+                {
+                    if (AreSame(_source[i], _changed[j]))
+                    {
+                        nextSameInSource = i;
+                        nextSameInChanged = j;
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void AddAddition(int dest, int start, int finish)
+        {
+            string[] content = GetSubArray(_changed, start, finish - 1);
+            Changes.Add(dest, new Addition(dest, content));
+        }
+
+        private void AddRemoval(int start, int finish)
+        {
+            int amount = finish - start;
+            Changes.Add(start, new Removal(start, amount));
+        }
+
+        private void AddReplacement(int removalStart, int removalFinish,
+                                    int additionStart, int additionFinish)
+        {
+            int removedLinesAmount = removalFinish - removalStart;
+            string[] newContent = GetSubArray(_changed, additionStart, additionFinish - 1);
+            Changes.Add(removalStart,
+                new Replacement(removalStart, newContent, removedLinesAmount));
         }
 
         private static bool AreSame(string a, string b) { return a.Trim().Equals(b.Trim()); }
@@ -117,5 +135,8 @@ namespace Automerger.Model
             Array.Copy(source, left, result, 0, length);
             return result;
         }
+
+        private string[] _source;
+        private string[] _changed;
     }
 }
