@@ -9,12 +9,21 @@ namespace Automerger.Model
     public class DummyMerger : IChangeSetMerger
     {
         public IDictionary<int, IChange> Merge(IReadOnlyDictionary<int, IMergableChange> changes1,
-                                               IReadOnlyDictionary<int, IMergableChange> changes2)
+                                               IReadOnlyDictionary<int, IMergableChange> changes2,
+                                               int sourceLength)
         {
             if ((changes1 == null) || (changes2 == null))
             {
                 throw new ArgumentNullException();
             }
+
+            if (sourceLength < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            ChangeSetVerifier.Verify(changes1, sourceLength);
+            ChangeSetVerifier.Verify(changes2, sourceLength);
 
             var result = new Dictionary<int, IChange>();
 

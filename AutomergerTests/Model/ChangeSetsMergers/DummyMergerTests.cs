@@ -10,7 +10,7 @@ namespace Automerger.Model.Tests
     public class DummyMergerTests
     {
         [TestMethod()]
-        public void MergeTest()
+        public void DummyMergeTest()
         {
             var merger = new DummyMerger();
 
@@ -23,13 +23,15 @@ namespace Automerger.Model.Tests
             changes2.Add(1, new Addition(1, new string[] { "30" }));
             changes2.Add(3, new Replacement(3, 2, new string[] { "40" }));
 
-            MyAssert.Throws<ArgumentNullException>(() => merger.Merge(null, changes2));
-            MyAssert.Throws<ArgumentNullException>(() => merger.Merge(changes1, null));
+            MyAssert.Throws<ArgumentNullException>(() => merger.Merge(null, changes2, 5));
+            MyAssert.Throws<ArgumentNullException>(() => merger.Merge(changes1, null, 5));
 
-            IDictionary<int, IChange> result = merger.Merge(changes1, changes2);
+            MyAssert.Throws<ArgumentOutOfRangeException>(() => merger.Merge(changes1, changes2, 4));
+
+            IDictionary<int, IChange> result = merger.Merge(changes1, changes2, 5);
             CheckDictionaries(changes1, result);
 
-            result = merger.Merge(changes2, changes1);
+            result = merger.Merge(changes2, changes1, 5);
             CheckDictionaries(changes2, result);
         }
 

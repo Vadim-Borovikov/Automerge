@@ -12,6 +12,8 @@ namespace Automerger.Model
                 throw new ArgumentNullException();
             }
 
+            ChangeSetVerifier.Verify(changes, source.Length);
+
             foreach (int key in changes.Keys)
             {
                 if (key + changes[key].RemovedAmount > source.Length)

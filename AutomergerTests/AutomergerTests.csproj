@@ -52,6 +52,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Model\ChangeSetsMergers\DummyMergerTests.cs" />
+    <Compile Include="Model\ChangeSets\ChangeSetVerifierTests.cs" />
     <Compile Include="Model\Changes\AdditionTests.cs" />
     <Compile Include="Model\ChangeSets\ChangeSetApplierTests.cs" />
     <Compile Include="Model\ChangeSets\ChangeSetGeneratorTests.cs" />
