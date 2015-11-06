@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Automerger.Model
 {
     public class Replacement : Change, IMergableChange
     {
-        public Replacement(int start, int removedAmount, string[] newContent)
+        public Replacement(int start, int removedAmount, IReadOnlyList<string> newContent)
         {
             if ((start < 0) || (removedAmount < 1))
             {
@@ -16,7 +17,7 @@ namespace Automerger.Model
                 throw new ArgumentNullException();
             }
 
-            if (newContent.Length == 0)
+            if (newContent.Count == 0)
             {
                 throw new ArgumentException();
             }

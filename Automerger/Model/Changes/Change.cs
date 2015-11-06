@@ -19,11 +19,11 @@ namespace Automerger.Model
         //////////////////////////////////////////////////////////////////////////////////////
 
         #region Creation
-        protected void Initialize(int start, int removedAmount, string[] newContent)
+        protected void Initialize(int start, int removedAmount, IReadOnlyList<string> newContent)
         {
             Start = start;
             RemovedAmount = removedAmount;
-            NewContent = new List<string>(newContent).AsReadOnly();
+            NewContent = newContent;
         }
 
         public override bool Equals(object other)
