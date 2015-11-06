@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Automerger.Model
 {
@@ -8,11 +7,11 @@ namespace Automerger.Model
         //////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////
 
-        #region Common members and properties
+        #region Common properties
         public int Start { get; private set; }
         public int AfterFinish { get { return Start + RemovedAmount; } }
         public int RemovedAmount { get; private set; }
-        public IReadOnlyList<string> NewContent { get { return _newContent.AsReadOnly(); } }
+        public IReadOnlyList<string> NewContent { get; private set; }
         #endregion
 
         //////////////////////////////////////////////////////////////////////////////////////
@@ -23,17 +22,9 @@ namespace Automerger.Model
         {
             Start = start;
             RemovedAmount = removedAmount;
-            _newContent = new List<string>(newContent);
+            NewContent = new List<string>(newContent).AsReadOnly();
         }
         #endregion
-
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
-
-        #region Members
-        private List<string> _newContent;
-        #endregion
-
         //////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////
     }
