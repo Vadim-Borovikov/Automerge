@@ -25,10 +25,11 @@ namespace Automerger.Model.Tests
                 { 3, new Replacement(3, 2, new string[] { "40" }) }
             };
 
-            IDictionary<int, IChange> result = merger.Merge(changes1, changes2, 5);
+            var source = new string[5];
+            IDictionary<int, IChange> result = merger.Merge(changes1, changes2, source);
             MergersCommonTests.CheckDictionaries(changes1, result);
 
-            result = merger.Merge(changes2, changes1, 5);
+            result = merger.Merge(changes2, changes1, source);
             MergersCommonTests.CheckDictionaries(changes2, result);
         }
     }

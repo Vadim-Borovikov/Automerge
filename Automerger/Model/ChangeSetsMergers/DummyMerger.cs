@@ -10,20 +10,15 @@ namespace Automerger.Model
     {
         public IDictionary<int, IChange> Merge(IReadOnlyDictionary<int, IMergableChange> changes1,
                                                IReadOnlyDictionary<int, IMergableChange> changes2,
-                                               int sourceLength)
+                                               string[] source)
         {
-            if ((changes1 == null) || (changes2 == null))
+            if ((changes1 == null) || (changes2 == null) || (source == null))
             {
                 throw new ArgumentNullException();
             }
 
-            if (sourceLength < 0)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            ChangeSetVerifier.Verify(changes1, sourceLength);
-            ChangeSetVerifier.Verify(changes2, sourceLength);
+            ChangeSetVerifier.Verify(changes1, source.Length);
+            ChangeSetVerifier.Verify(changes2, source.Length);
 
             var result = new Dictionary<int, IChange>();
 

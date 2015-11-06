@@ -14,7 +14,7 @@ namespace Automerger.Presenter
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var merger = new Model.DummyMerger();
+            var merger = new Model.CustomMerger();
             var form = new View.MainForm();
             var presenter = new Presenter(merger, form);
 

@@ -6,6 +6,6 @@ namespace Automerger.Model
     {
         IDictionary<int, IChange> Merge(IReadOnlyDictionary<int, IMergableChange> changes1,
                                         IReadOnlyDictionary<int, IMergableChange> changes2,
-                                        int sourceLength);
+                                        string[] source);
     }
 }

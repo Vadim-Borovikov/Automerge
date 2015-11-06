@@ -59,8 +59,7 @@ namespace Automerger.Presenter
             Dictionary<int, Model.IMergableChange> changes2 =
                 Model.ChangeSetGenerator.Generate(_source, _changed2);
 
-            IDictionary<int, Model.IChange> merged =
-                _merger.Merge(changes1, changes2, _source.Length);
+            IDictionary<int, Model.IChange> merged = _merger.Merge(changes1, changes2, _source);
 
             ConflictsDetected = merged.Values.Any(c => c is Model.Conflict);
 

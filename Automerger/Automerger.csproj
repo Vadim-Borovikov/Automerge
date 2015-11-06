@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ChangeSetsMergers\IChangeSetMerger.cs" />
+    <Compile Include="Model\ChangeSetsMergers\CustomMerger.cs" />
     <Compile Include="Model\ChangeSets\ChangeSetVerifier.cs" />
     <Compile Include="Model\Changes\Addition.cs" />
     <Compile Include="Model\Changes\Change.cs" />
