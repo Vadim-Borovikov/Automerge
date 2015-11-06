@@ -10,19 +10,16 @@ namespace Automerger.Model
 
         #region Creation
         public Conflict(IMergableChange change1, IMergableChange change2,
-                        string[] source, int start)
+                        string[] source)
         {
             if ((change1 == null) || (change2 == null) || (source == null))
             {
                 throw new ArgumentNullException();
             }
 
-            if ((start < 0) || (start > source.Length))
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            int start = Math.Min(change1.Start, change2.Start);
 
-            if (start != Math.Min(change1.Start, change2.Start))
+            if ((start < 0) || (start > source.Length))
             {
                 throw new ArgumentOutOfRangeException();
             }

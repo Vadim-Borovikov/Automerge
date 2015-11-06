@@ -20,23 +20,21 @@ namespace Automerger.Model.Tests
             IMergableChange change1 = new Addition(0, content1);
             IMergableChange change2 = new Addition(0, content2);
 
-            CheckPair<ArgumentNullException>(null, change2, source, 0);
-            MyAssert.Throws<ArgumentNullException>(() => new Conflict(change1, change2, null, 0));
-            MyAssert.Throws<ArgumentOutOfRangeException>(
-                () => new Conflict(change1, change2, source, -1));
+            CheckPair<ArgumentNullException>(null, change2, source);
+            MyAssert.Throws<ArgumentNullException>(() => new Conflict(change1, change2, null));
 
             change1 = new Addition(0, content1);
             change2 = new Addition(1, content2);
-            CheckPair<ArgumentOutOfRangeException>(change1, change2, source, 0);
+            CheckPair<ArgumentOutOfRangeException>(change1, change2, source);
 
             source = new string[] { "0" };
             change1 = new Addition(0, content1);
             change2 = new Addition(1, content2);
-            CheckPair<ArgumentException>(change1, change2, source, 0);
+            CheckPair<ArgumentException>(change1, change2, source);
 
             change1 = new Addition(0, content1);
             change2 = new Addition(0, content2);
-            var conflict = new Conflict(change1, change2, source, 0);
+            var conflict = new Conflict(change1, change2, source);
             Assert.IsTrue(conflict.Start == 0);
             Assert.IsTrue(conflict.RemovedAmount == 0);
             Assert.IsTrue(conflict.AfterFinish == 0);
@@ -45,7 +43,7 @@ namespace Automerger.Model.Tests
             source = new string[] { "0", "1", "2" };
             change1 = new Replacement(0, 2, new string[] { "10" });
             change2 = new Replacement(1, 2, new string[] { "20", "30" });
-            conflict = new Conflict(change1, change2, source, 0);
+            conflict = new Conflict(change1, change2, source);
             Assert.IsTrue(conflict.Start == 0);
             Assert.IsTrue(conflict.RemovedAmount == 3);
             Assert.IsTrue(conflict.AfterFinish == 3);
@@ -54,10 +52,11 @@ namespace Automerger.Model.Tests
         }
 
         private void CheckPair<T>(IMergableChange change1, IMergableChange change2,
-                                  string[] source, int start) where T : Exception
+                                  string[] source)
+            where T : Exception
         {
-            MyAssert.Throws<T>(() => new Conflict(change1, change2, source, start));
-            MyAssert.Throws<T>(() => new Conflict(change2, change1, source, start));
+            MyAssert.Throws<T>(() => new Conflict(change1, change2, source));
+            MyAssert.Throws<T>(() => new Conflict(change2, change1, source));
         }
 
         private void CheckConflictContent(Conflict conflict, string[] source,
