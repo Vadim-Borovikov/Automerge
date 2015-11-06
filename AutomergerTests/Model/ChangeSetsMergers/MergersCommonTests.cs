@@ -28,10 +28,10 @@ namespace Automerger.Model.Tests
         public static void CheckDictionaries<T1, T2>(IDictionary<int, T1> expected,
                                                      IDictionary<int, T2> actual)
         {
-            Assert.IsTrue(actual.Keys.SequenceEqual(expected.Keys));
-            foreach (int key in actual.Keys)
+            CollectionAssert.AreEquivalent(expected.Keys.ToList(), actual.Keys.ToList());
+            foreach (int key in expected.Keys)
             {
-                Assert.AreEqual(actual[key], expected[key]);
+                Assert.AreEqual(expected[key], actual[key]);
             }
         }
     }
