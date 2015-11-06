@@ -27,19 +27,25 @@ namespace Automerger.Model
                 throw new ArgumentOutOfRangeException();
             }
 
-            if ((change1.Start >= source.Length) || (change2.Start >= source.Length))
+            int afterFinish = Math.Max(change1.AfterFinish, change2.AfterFinish);
+            if (afterFinish > source.Length)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            int afterlastFinish = Math.Max(change1.Start + change1.RemovedAmount,
-                                           change2.Start + change2.RemovedAmount);
+            if ((change1.Start >= change2.AfterFinish) || (change2.Start >= change1.AfterFinish))
+            {
+                if (change1.Start != change2.Start)
+                {
+                    throw new ArgumentException();
+                }
+            }
 
-            int removedAmount = afterlastFinish - start;
+            int removedAmount = afterFinish - start;
 
-            string[] originalBlock = Utils.GetSubArray(source, start, afterlastFinish);
-            string[] changedBlock1 = GetChangedBlock(source, start, afterlastFinish, change1);
-            string[] changedBlock2 = GetChangedBlock(source, start, afterlastFinish, change2);
+            string[] originalBlock = Utils.GetSubArray(source, start, afterFinish);
+            string[] changedBlock1 = GetChangedBlock(source, start, afterFinish, change1);
+            string[] changedBlock2 = GetChangedBlock(source, start, afterFinish, change2);
 
             var newContent = new List<string>();
             newContent.Add(Consts.CONFLICT_BLOCK_BEGIN);
