@@ -65,7 +65,7 @@ namespace Automerger.Presenter
 
             var changes = new ReadOnlyDictionary<int, Model.IChange>(merged);
 
-            _result = Model.ChangeSetApplyer.Apply(changes, _source);
+            _result = Model.ChangeSetApplier.Apply(changes, _source);
         }
 
         public void SaveResult(string path)

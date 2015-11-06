@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Automerger.Model.Tests
 {
     [TestClass()]
-    public class ChangeSetApplyerTests
+    public class ChangeSetApplierTests
     {
         [TestMethod()]
         public void ApplyTest()
@@ -14,21 +14,21 @@ namespace Automerger.Model.Tests
             var changes = new Dictionary<int, IChange>();
             var source = new string[0];
 
-            MyAssert.Throws<ArgumentNullException>(() => ChangeSetApplyer.Apply(null, source));
-            MyAssert.Throws<ArgumentNullException>(() => ChangeSetApplyer.Apply(changes, null));
+            MyAssert.Throws<ArgumentNullException>(() => ChangeSetApplier.Apply(null, source));
+            MyAssert.Throws<ArgumentNullException>(() => ChangeSetApplier.Apply(changes, null));
 
             changes[0] = new Replacement(0, 1, new string[] { "0" });
             MyAssert.Throws<ArgumentOutOfRangeException>(
-                () => ChangeSetApplyer.Apply(changes, source));
+                () => ChangeSetApplier.Apply(changes, source));
 
             source = new string[] { "0" };
             changes[0] = new Replacement(0, 2, new string[] { "0" });
             MyAssert.Throws<ArgumentOutOfRangeException>(
-                () => ChangeSetApplyer.Apply(changes, source));
+                () => ChangeSetApplier.Apply(changes, source));
 
             source = new string[0];
             changes[0] = new Addition(0, new string[] { "0" });
-            MyAssert.ThrowsNothing(() => ChangeSetApplyer.Apply(changes, source));
+            MyAssert.ThrowsNothing(() => ChangeSetApplier.Apply(changes, source));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Automerger.Model
 {
-    public static class ChangeSetApplyer
+    public static class ChangeSetApplier
     {
         public static string[] Apply(IReadOnlyDictionary<int, IChange> changes, string[] source)
         {
