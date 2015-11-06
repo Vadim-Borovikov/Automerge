@@ -21,19 +21,20 @@ namespace Automerger.Model
 
             foreach (int current in changes.Keys)
             {
-                if ((current < 0) || (changes[current].AfterFinish > sourceLength))
+                if (current < 0)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
 
-                if (changes[current].Start != current)
+                IChange change = changes[current];
+                if ((change.Start != current) || (change.AfterFinish > sourceLength))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
 
                 foreach (int key in changes.Keys.Where(k => (k > current)))
                 {
-                    if (key < changes[current].AfterFinish)
+                    if (key < change.AfterFinish)
                     {
                         throw new ArgumentOutOfRangeException();
                     }
