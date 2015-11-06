@@ -150,7 +150,7 @@ namespace Automerger.Presenter.Tests
             string[] result = File.ReadAllLines(resultPath);
             File.Delete(resultPath);
 
-            Assert.IsTrue(result.SequenceEqual(new string[1] { "1" }));
+            Assert.IsTrue(result.SequenceEqual(new string[] { "1" }));
         }
 
         private void LoadFileTest(Action<string> loadFile)

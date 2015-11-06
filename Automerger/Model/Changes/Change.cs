@@ -18,18 +18,8 @@ namespace Automerger.Model
         //////////////////////////////////////////////////////////////////////////////////////
 
         #region Creation
-        protected Change(int start, int removedAmount, string[] newContent)
+        protected void Initialize(int start, int removedAmount, string[] newContent)
         {
-            if ((start < 0) || (removedAmount < 0))
-            {
-                throw new ArgumentException();
-            }
-
-            if (newContent == null)
-            {
-                throw new ArgumentNullException();
-            }
-
             Start = start;
             RemovedAmount = removedAmount;
             _newContent = new List<string>(newContent);

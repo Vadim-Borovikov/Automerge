@@ -4,12 +4,14 @@ namespace Automerger.Model
 {
     public class Removal : Change, IMergableChange
     {
-        public Removal(int start, int amount) : base(start, amount, new string[0])
+        public Removal(int start, int amount)
         {
-            if (amount < 1)
+            if ((start < 0) || (amount < 1))
             {
-                throw new ArgumentException();
+                throw new ArgumentOutOfRangeException();
             }
+
+            Initialize(start, amount, new string[0]);
         }
     }
 }

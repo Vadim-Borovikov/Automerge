@@ -11,14 +11,15 @@ namespace Automerger.Model.Tests
         [TestMethod()]
         public void ReplacementTest()
         {
-            string[] content = new string[1] { "Test" };
+            string[] content = new string[] { "Test" };
 
-            MyAssert.Throws<ArgumentException>(() => new Replacement(-1, 1, content));
+            MyAssert.Throws<ArgumentOutOfRangeException>(() => new Replacement(-1, 1, content));
 
-            MyAssert.Throws<ArgumentException>(() => new Replacement(1, -1, content));
-            MyAssert.Throws<ArgumentException>(() => new Replacement(1, 0, content));
+            MyAssert.Throws<ArgumentOutOfRangeException>(() => new Replacement(0, -1, content));
+            MyAssert.Throws<ArgumentOutOfRangeException>(() => new Replacement(0, 0, content));
 
-            MyAssert.Throws<ArgumentNullException>(() => new Replacement(1, 1, null));
+            MyAssert.Throws<ArgumentNullException>(() => new Replacement(0, 1, null));
+            MyAssert.Throws<ArgumentException>(() => new Replacement(0, 1, new string[0]));
 
             var replacement = new Replacement(0, 1, content);
 

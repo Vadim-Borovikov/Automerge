@@ -114,9 +114,9 @@ namespace Automerger.Model
             }
         }
 
-        private static void AddAddition(int dest, int start, int finish)
+        private static void AddAddition(int dest, int start, int afterFinish)
         {
-            string[] content = GetSubArray(_changed, start, finish - 1);
+            string[] content = Utils.GetSubArray(_changed, start, afterFinish);
             _changes.Add(dest, new Addition(dest, content));
         }
 
@@ -126,23 +126,15 @@ namespace Automerger.Model
             _changes.Add(start, new Removal(start, amount));
         }
 
-        private static void AddReplacement(int removalStart, int removalFinish,
-                                    int additionStart, int additionFinish)
+        private static void AddReplacement(int removalStart, int afterRemovalFinish,
+                                           int additionStart, int afterAdditionFinish)
         {
-            int removedAmount = removalFinish - removalStart;
-            string[] newContent = GetSubArray(_changed, additionStart, additionFinish - 1);
+            int removedAmount = afterRemovalFinish - removalStart;
+            string[] newContent = Utils.GetSubArray(_changed, additionStart, afterAdditionFinish);
             _changes.Add(removalStart, new Replacement(removalStart, removedAmount, newContent));
         }
 
         private static bool AreSame(string a, string b) { return a.Trim().Equals(b.Trim()); }
-
-        private static string[] GetSubArray(string[] source, int left, int right)
-        {
-            int length = right - left + 1;
-            var result = new string[length];
-            Array.Copy(source, left, result, 0, length);
-            return result;
-        }
         #endregion
 
         //////////////////////////////////////////////////////////////////////////////////////

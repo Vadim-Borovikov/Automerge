@@ -11,11 +11,12 @@ namespace Automerger.Model.Tests
         [TestMethod()]
         public void AdditionTest()
         {
-            string[] content = new string[1] { "Test" };
+            string[] content = new string[] { "Test" };
 
-            MyAssert.Throws<ArgumentException>(() => new Addition(-1, content));
+            MyAssert.Throws<ArgumentOutOfRangeException>(() => new Addition(-1, content));
 
             MyAssert.Throws<ArgumentNullException>(() => new Addition(0, null));
+            MyAssert.Throws<ArgumentException>(() => new Addition(0, new string[0]));
 
             var addition = new Addition(1, content);
 

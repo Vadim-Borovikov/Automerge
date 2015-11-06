@@ -57,6 +57,7 @@
     <Compile Include="Model\Changes\Removal.cs" />
     <Compile Include="Model\Changes\Replacement.cs" />
     <Compile Include="Model\ChangeSetsMergers\DummyMerger.cs" />
+    <Compile Include="Model\Utils.cs" />
     <Compile Include="Presenter\Presenter.cs" />
     <Compile Include="View\IView.cs" />
     <Compile Include="View\MainForm.cs">

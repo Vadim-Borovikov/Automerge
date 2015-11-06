@@ -10,9 +10,9 @@ namespace Automerger.Model.Tests
         [TestMethod()]
         public void RemovalTest()
         {
-            MyAssert.Throws<ArgumentException>(() => new Removal(-1, 1));
+            MyAssert.Throws<ArgumentOutOfRangeException>(() => new Removal(-1, 1));
 
-            MyAssert.Throws<ArgumentException>(() => new Removal(1, -1));
+            MyAssert.Throws<ArgumentOutOfRangeException>(() => new Removal(1, -1));
 
             var removal = new Removal(0, 1);
 
