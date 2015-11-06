@@ -120,9 +120,9 @@ namespace Automerger.Model
             _changes.Add(dest, new Addition(dest, content));
         }
 
-        private static void AddRemoval(int start, int finish)
+        private static void AddRemoval(int start, int afterFinish)
         {
-            int amount = finish - start;
+            int amount = afterFinish - start;
             _changes.Add(start, new Removal(start, amount));
         }
 

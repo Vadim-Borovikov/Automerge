@@ -39,6 +39,7 @@ namespace Automerger.Model.Tests
             var conflict = new Conflict(change1, change2, source, 0);
             Assert.IsTrue(conflict.Start == 0);
             Assert.IsTrue(conflict.RemovedAmount == 0);
+            Assert.IsTrue(conflict.AfterFinish == 0);
             CheckConflictContent(conflict, emptyContent, content1, content2);
 
             source = new string[] { "0", "1", "2" };
@@ -47,6 +48,7 @@ namespace Automerger.Model.Tests
             conflict = new Conflict(change1, change2, source, 0);
             Assert.IsTrue(conflict.Start == 0);
             Assert.IsTrue(conflict.RemovedAmount == 3);
+            Assert.IsTrue(conflict.AfterFinish == 3);
             CheckConflictContent(conflict, source,
                                  new string[] { "10", "2" }, new string[] { "0", "20", "30" });
         }

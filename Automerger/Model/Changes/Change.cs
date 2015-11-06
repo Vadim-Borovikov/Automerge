@@ -10,6 +10,7 @@ namespace Automerger.Model
 
         #region Common members and properties
         public int Start { get; private set; }
+        public int AfterFinish { get { return Start + RemovedAmount; } }
         public int RemovedAmount { get; private set; }
         public IReadOnlyList<string> NewContent { get { return _newContent.AsReadOnly(); } }
         #endregion

@@ -63,9 +63,9 @@ namespace Automerger.Presenter
 
             ConflictsDetected = merged.Values.Any(c => c is Model.Conflict);
 
-            var chages = new ReadOnlyDictionary<int, Model.IChange>(merged);
+            var changes = new ReadOnlyDictionary<int, Model.IChange>(merged);
 
-            _result = Model.ChangeSetApplyer.Apply(chages, _source);
+            _result = Model.ChangeSetApplyer.Apply(changes, _source);
         }
 
         public void SaveResult(string path)

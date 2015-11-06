@@ -22,6 +22,7 @@ namespace Automerger.Model.Tests
 
             Assert.IsTrue(addition.Start == 1);
             Assert.IsTrue(addition.RemovedAmount == 0);
+            Assert.IsTrue(addition.AfterFinish == 1);
             Assert.IsTrue(content.SequenceEqual(addition.NewContent));
         }
     }

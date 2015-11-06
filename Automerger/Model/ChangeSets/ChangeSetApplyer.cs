@@ -33,7 +33,7 @@ namespace Automerger.Model
                     result.AddRange(change.NewContent);
                     if (change.RemovedAmount > 0)
                     {
-                        i += change.RemovedAmount - 1;
+                        i = change.AfterFinish - 1;
                         shouldAddSource = false;
                     }
                 }
