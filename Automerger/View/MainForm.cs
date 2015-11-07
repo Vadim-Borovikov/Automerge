@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Automerger.Presenter;
+using System.Diagnostics;
 
 namespace Automerger.View
 {
@@ -66,6 +67,7 @@ namespace Automerger.View
                 toolStripStatusLabel.Text =
                     _presenter.ConflictsDetected ? "Done. Warning: conflict(s) detected!"
                                                  : "Done!";
+                Process.Start(saveFileDialog.FileName);
             }
         }
         #endregion
