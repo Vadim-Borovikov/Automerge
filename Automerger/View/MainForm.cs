@@ -44,51 +44,29 @@ namespace Automerger.View
 
         private void buttonLoadSource_Click(object sender, EventArgs e)
         {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                _presenter.LoadSource(openFileDialog.FileName);
-                labelSource.Text = openFileDialog.FileName;
-
-                UpdateControls();
-            }
+            TryEntrainFile(openFileDialog, _presenter.TryLoadSource, labelSource);
         }
 
         private void buttonLoadVersion1_Click(object sender, EventArgs e)
         {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                _presenter.LoadChanged1(openFileDialog.FileName);
-                labelChanged1.Text = openFileDialog.FileName;
-
-                UpdateControls();
-            }
+            TryEntrainFile(openFileDialog, _presenter.TryLoadChanged1, labelChanged1);
         }
 
         private void buttonLoadVersion2_Click(object sender, EventArgs e)
         {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                _presenter.LoadChanged2(openFileDialog.FileName);
-                labelChanged2.Text = openFileDialog.FileName;
-
-                UpdateControls();
-            }
+            TryEntrainFile(openFileDialog, _presenter.TryLoadChanged2, labelChanged2);
         }
 
         private void buttonMerge_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-
-            labelMerge.Text = saveFileDialog.FileName;
-
             _presenter.Merge();
-            _presenter.SaveResult(saveFileDialog.FileName);
 
-            toolStripStatusLabel.Text =
-                _presenter.ConflictsDetected ? "Done. Warning: conflict(s) detected!" : "Done!";
+            if (TryEntrainFile(saveFileDialog, _presenter.TrySaveResult, labelMerge))
+            {
+                toolStripStatusLabel.Text =
+                    _presenter.ConflictsDetected ? "Done. Warning: conflict(s) detected!"
+                                                 : "Done!";
+            }
         }
         #endregion
 
@@ -101,6 +79,31 @@ namespace Automerger.View
             buttonMerge.Enabled = _presenter.IsReadyForMerge();
             toolStripStatusLabel.Text =
                 _presenter.IsReadyForMerge() ? "Ready for merge" : "Ready for loading";
+        }
+
+        private bool TryEntrainFile(FileDialog dialog, Func<string, bool> tryEntrainFile,
+                                    Label label)
+        {
+            while (dialog.ShowDialog() == DialogResult.OK)
+            {
+                if (tryEntrainFile(dialog.FileName))
+                {
+                    label.Text = dialog.FileName;
+                    UpdateControls();
+                    return true;
+                }
+
+                DialogResult result =
+                    MessageBox.Show("Sometning went wrong! Please try another file.", "Error",
+                                    MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+
+                if (result == DialogResult.Cancel)
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
         #endregion
 

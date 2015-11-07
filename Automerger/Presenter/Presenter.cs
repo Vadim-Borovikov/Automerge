@@ -32,19 +32,43 @@ namespace Automerger.Presenter
         #region Public properties and methods
         public bool ConflictsDetected { get; private set; }
 
-        public void LoadSource(string path)
+        public bool TryLoadSource(string path)
         {
-            _source = File.ReadAllLines(path);
+            try
+            {
+                _source = File.ReadAllLines(path);
+                return true;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
         }
 
-        public void LoadChanged1(string path)
+        public bool TryLoadChanged1(string path)
         {
-            _changed1 = File.ReadAllLines(path);
+            try
+            {
+                _changed1 = File.ReadAllLines(path);
+                return true;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
         }
 
-        public void LoadChanged2(string path)
+        public bool TryLoadChanged2(string path)
         {
-            _changed2 = File.ReadAllLines(path);
+            try
+            {
+                _changed2 = File.ReadAllLines(path);
+                return true;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
         }
 
         public bool IsReadyForMerge()
@@ -68,9 +92,17 @@ namespace Automerger.Presenter
             _result = Model.ChangeSetApplier.Apply(changes, _source);
         }
 
-        public void SaveResult(string path)
+        public bool TrySaveResult(string path)
         {
-            File.WriteAllLines(path, _result);
+            try
+            {
+                File.WriteAllLines(path, _result);
+                return true;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
         }
         #endregion
 

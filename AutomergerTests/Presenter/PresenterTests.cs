@@ -29,7 +29,7 @@ namespace Automerger.Presenter.Tests
 
             var presenter = new Presenter(merger, view);
 
-            LoadFileTest(presenter.LoadSource);
+            LoadFileTest(presenter.TryLoadSource);
         }
 
         [TestMethod()]
@@ -40,7 +40,7 @@ namespace Automerger.Presenter.Tests
 
             var presenter = new Presenter(merger, view);
 
-            LoadFileTest(presenter.LoadChanged1);
+            LoadFileTest(presenter.TryLoadChanged1);
         }
 
         [TestMethod()]
@@ -51,7 +51,7 @@ namespace Automerger.Presenter.Tests
 
             var presenter = new Presenter(merger, view);
 
-            LoadFileTest(presenter.LoadChanged2);
+            LoadFileTest(presenter.TryLoadChanged2);
         }
 
         [TestMethod()]
@@ -65,19 +65,19 @@ namespace Automerger.Presenter.Tests
 
             string path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
-            presenter.LoadSource(path);
+            Assert.IsTrue(presenter.TryLoadSource(path));
             File.Delete(path);
             Assert.IsFalse(presenter.IsReadyForMerge());
 
             path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
-            presenter.LoadChanged1(path);
+            Assert.IsTrue(presenter.TryLoadChanged1(path));
             File.Delete(path);
             Assert.IsFalse(presenter.IsReadyForMerge());
 
             path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
-            presenter.LoadChanged2(path);
+            Assert.IsTrue(presenter.TryLoadChanged2(path));
             File.Delete(path);
             Assert.IsTrue(presenter.IsReadyForMerge());
         }
@@ -92,19 +92,19 @@ namespace Automerger.Presenter.Tests
 
             string path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
-            presenter.LoadSource(path);
+            Assert.IsTrue(presenter.TryLoadSource(path));
             File.Delete(path);
             MyAssert.Throws<ArgumentNullException>(() => presenter.Merge());
 
             path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
-            presenter.LoadChanged1(path);
+            Assert.IsTrue(presenter.TryLoadChanged1(path));
             File.Delete(path);
             MyAssert.Throws<ArgumentNullException>(() => presenter.Merge());
 
             path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
-            presenter.LoadChanged2(path);
+            Assert.IsTrue(presenter.TryLoadChanged2(path));
             File.Delete(path);
             MyAssert.ThrowsNothing(() => presenter.Merge());
         }
@@ -117,35 +117,35 @@ namespace Automerger.Presenter.Tests
 
             var presenter = new Presenter(merger, view);
 
-            MyAssert.Throws<ArgumentNullException>(() => presenter.SaveResult(null));
+            MyAssert.Throws<ArgumentNullException>(() => presenter.TrySaveResult(null));
 
             string resultPath = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(resultPath));
-            MyAssert.Throws<ArgumentNullException>(() => presenter.SaveResult(resultPath));
+            MyAssert.Throws<ArgumentNullException>(() => presenter.TrySaveResult(resultPath));
 
             string path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
             File.WriteAllText(path, "0");
-            presenter.LoadSource(path);
+            Assert.IsTrue(presenter.TryLoadSource(path));
             File.Delete(path);
-            MyAssert.Throws<ArgumentNullException>(() => presenter.SaveResult(resultPath));
+            MyAssert.Throws<ArgumentNullException>(() => presenter.TrySaveResult(resultPath));
 
             path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
             File.WriteAllText(path, "1");
-            presenter.LoadChanged1(path);
+            Assert.IsTrue(presenter.TryLoadChanged1(path));
             File.Delete(path);
-            MyAssert.Throws<ArgumentNullException>(() => presenter.SaveResult(resultPath));
+            MyAssert.Throws<ArgumentNullException>(() => presenter.TrySaveResult(resultPath));
 
             path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
             File.WriteAllText(path, "1");
-            presenter.LoadChanged2(path);
+            Assert.IsTrue(presenter.TryLoadChanged2(path));
             File.Delete(path);
-            MyAssert.Throws<ArgumentNullException>(() => presenter.SaveResult(resultPath));
+            MyAssert.Throws<ArgumentNullException>(() => presenter.TrySaveResult(resultPath));
 
             presenter.Merge();
-            presenter.SaveResult(resultPath);
+            Assert.IsTrue(presenter.TrySaveResult(resultPath));
 
             string[] result = File.ReadAllLines(resultPath);
             File.Delete(resultPath);
@@ -153,18 +153,14 @@ namespace Automerger.Presenter.Tests
             Assert.IsTrue(result.SequenceEqual(new string[] { "1" }));
         }
 
-        private void LoadFileTest(Action<string> loadFile)
+        private void LoadFileTest(Func<string, bool> tryLoadFile)
         {
-            MyAssert.Throws<ArgumentNullException>(() => loadFile(null));
-            MyAssert.Throws<ArgumentException>(() => loadFile(""));
+            MyAssert.Throws<ArgumentNullException>(() => tryLoadFile(null));
+            MyAssert.Throws<ArgumentException>(() => tryLoadFile(""));
 
-            string path = "LoadSourceTest";
-            Assert.IsFalse(File.Exists(path));
-            MyAssert.Throws<FileNotFoundException>(() => loadFile(path));
-
-            path = Path.GetTempFileName();
+            string path = Path.GetTempFileName();
             Assert.IsTrue(File.Exists(path));
-            MyAssert.ThrowsNothing(() => loadFile(path));
+            Assert.IsTrue(tryLoadFile(path));
             File.Delete(path);
         }
     }
