@@ -105,6 +105,11 @@ namespace Automerger.Model
             nextSameInChanged = _changed.Length;
             for (int i = startLineInSource; i < _source.Length; ++i)
             {
+                if (string.IsNullOrWhiteSpace(_source[i]))
+                {
+                    continue;
+                }
+
                 for (int j = startLineInChanges; j < _changed.Length; ++j)
                 {
                     if (AreSame(_source[i], _changed[j]))
