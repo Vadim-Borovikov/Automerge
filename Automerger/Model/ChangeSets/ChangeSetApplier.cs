@@ -25,9 +25,9 @@ namespace Automerger.Model
             var result = new List<string>();
 
             bool shouldAddSource;
-            for (int i = 0; i < source.Length; ++i)
+            for (int i = 0; i <= source.Length; ++i)
             {
-                shouldAddSource = true;
+                shouldAddSource = (i < source.Length);
 
                 if (changes.ContainsKey(i))
                 {
