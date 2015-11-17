@@ -96,13 +96,26 @@ namespace Automerger.Presenter
         {
             try
             {
-                File.WriteAllLines(path, _result);
+                WriteAllLines(path, _result);
                 return true;
             }
             catch (IOException)
             {
                 return false;
             }
+        }
+        #endregion
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        #region Helper
+        private static void WriteAllLines(string path, string[] lines)
+        {
+            // Unfortunately File.WriteAllLines leaves an empty line at the end
+
+            string text = string.Join("\r\n", lines);
+            File.WriteAllText(path, text);
         }
         #endregion
 
