@@ -1,17 +1,17 @@
-﻿using AutomergerTests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Linq;
+using AutomergerTests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Automerger.Model.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ReplacementTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void ReplacementTest()
         {
-            string[] content = new string[] { "Test" };
+            string[] content = { "Test" };
 
             MyAssert.Throws<ArgumentOutOfRangeException>(() => new Replacement(-1, 1, content));
 

@@ -1,33 +1,35 @@
-﻿using AutomergerTests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutomergerTests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Automerger.Model.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ConflictTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void ConflictTest()
         {
             var emptyContent = new string[0];
-            var content1 = new string[] { "1" };
-            var content2 = new string[] { "2" };
+            var content1 = new[] { "1" };
+            var content2 = new[] { "2" };
 
             var source = emptyContent;
             IMergableChange change1 = new Addition(0, content1);
             IMergableChange change2 = new Addition(0, content2);
 
             CheckPair<ArgumentNullException>(null, change2, source);
-            MyAssert.Throws<ArgumentNullException>(() => new Conflict(change1, change2, null));
+            IMergableChange change3 = change1;
+            IMergableChange change4 = change2;
+            MyAssert.Throws<ArgumentNullException>(() => new Conflict(change3, change4, null));
 
             change1 = new Addition(0, content1);
             change2 = new Addition(1, content2);
             CheckPair<ArgumentOutOfRangeException>(change1, change2, source);
 
-            source = new string[] { "0" };
+            source = new[] { "0" };
             change1 = new Addition(0, content1);
             change2 = new Addition(1, content2);
             CheckPair<ArgumentException>(change1, change2, source);
@@ -40,32 +42,30 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(conflict.AfterFinish == 0);
             CheckConflictContent(conflict, emptyContent, content1, content2);
 
-            source = new string[] { "0", "1", "2" };
-            change1 = new Replacement(0, 2, new string[] { "10" });
-            change2 = new Replacement(1, 2, new string[] { "20", "30" });
+            source = new[] { "0", "1", "2" };
+            change1 = new Replacement(0, 2, new[] { "10" });
+            change2 = new Replacement(1, 2, new[] { "20", "30" });
             conflict = new Conflict(change1, change2, source);
             Assert.IsTrue(conflict.Start == 0);
             Assert.IsTrue(conflict.RemovedAmount == 3);
             Assert.IsTrue(conflict.AfterFinish == 3);
-            CheckConflictContent(conflict, source,
-                                 new string[] { "10", "2" }, new string[] { "0", "20", "30" });
+            CheckConflictContent(conflict, source, new[] { "10", "2" }, new[] { "0", "20", "30" });
         }
 
-        private void CheckPair<T>(IMergableChange change1, IMergableChange change2,
-                                  string[] source)
+        private static void CheckPair<T>(IMergableChange change1, IMergableChange change2, string[] source)
             where T : Exception
         {
             MyAssert.Throws<T>(() => new Conflict(change1, change2, source));
             MyAssert.Throws<T>(() => new Conflict(change2, change1, source));
         }
 
-        private void CheckConflictContent(Conflict conflict, string[] source,
-                                          string[] changed1, string[] changed2)
+        private static void CheckConflictContent(IChange conflict, IEnumerable<string> source,
+                                                 IEnumerable<string> changed1, IEnumerable<string> changed2)
         {
             var expected = new List<string>
             {
                 Consts.CONFLICT_BLOCK_BEGIN,
-                Consts.CONFLICT_BLOCK_SOURCE,
+                Consts.CONFLICT_BLOCK_SOURCE
             };
             expected.AddRange(source);
             expected.Add(Consts.CONFLICT_BLOCK_CHANGED1);

@@ -1,30 +1,30 @@
-﻿using Automerger.Presenter;
+﻿using System;
+using System.IO;
+using System.Linq;
+using Automerger.Model;
 using Automerger.View.Tests;
 using AutomergerTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace Automerger.Presenter.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class PresenterTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void PresenterTest()
         {
-            var merger = new Model.DummyMerger();
+            var merger = new DummyMerger();
             var view = new DummyView();
 
             MyAssert.Throws<ArgumentNullException>(() => new Presenter(null, view));
             MyAssert.Throws<ArgumentNullException>(() => new Presenter(merger, null));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void LoadSourceTest()
         {
-            var merger = new Model.DummyMerger();
+            var merger = new DummyMerger();
             var view = new DummyView();
 
             var presenter = new Presenter(merger, view);
@@ -32,10 +32,10 @@ namespace Automerger.Presenter.Tests
             LoadFileTest(presenter.TryLoadSource);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void LoadChanged1Test()
         {
-            var merger = new Model.DummyMerger();
+            var merger = new DummyMerger();
             var view = new DummyView();
 
             var presenter = new Presenter(merger, view);
@@ -43,10 +43,10 @@ namespace Automerger.Presenter.Tests
             LoadFileTest(presenter.TryLoadChanged1);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void LoadChanged2Test()
         {
-            var merger = new Model.DummyMerger();
+            var merger = new DummyMerger();
             var view = new DummyView();
 
             var presenter = new Presenter(merger, view);
@@ -54,10 +54,10 @@ namespace Automerger.Presenter.Tests
             LoadFileTest(presenter.TryLoadChanged2);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void IsReadyForMergeTest()
         {
-            var merger = new Model.DummyMerger();
+            var merger = new DummyMerger();
             var view = new DummyView();
 
             var presenter = new Presenter(merger, view);
@@ -82,10 +82,10 @@ namespace Automerger.Presenter.Tests
             Assert.IsTrue(presenter.IsReadyForMerge());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MergeTest()
         {
-            var merger = new Model.DummyMerger();
+            var merger = new DummyMerger();
             var view = new DummyView();
 
             var presenter = new Presenter(merger, view);
@@ -106,13 +106,13 @@ namespace Automerger.Presenter.Tests
             Assert.IsTrue(File.Exists(path));
             Assert.IsTrue(presenter.TryLoadChanged2(path));
             File.Delete(path);
-            MyAssert.ThrowsNothing(() => presenter.Merge());
+            presenter.Merge();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void SaveResultTest()
         {
-            var merger = new Model.DummyMerger();
+            var merger = new DummyMerger();
             var view = new DummyView();
 
             var presenter = new Presenter(merger, view);
@@ -150,10 +150,10 @@ namespace Automerger.Presenter.Tests
             string[] result = File.ReadAllLines(resultPath);
             File.Delete(resultPath);
 
-            Assert.IsTrue(result.SequenceEqual(new string[] { "1" }));
+            Assert.IsTrue(result.SequenceEqual(new[] { "1" }));
         }
 
-        private void LoadFileTest(Func<string, bool> tryLoadFile)
+        public void LoadFileTest(Func<string, bool> tryLoadFile)
         {
             MyAssert.Throws<ArgumentNullException>(() => tryLoadFile(null));
             MyAssert.Throws<ArgumentException>(() => tryLoadFile(""));

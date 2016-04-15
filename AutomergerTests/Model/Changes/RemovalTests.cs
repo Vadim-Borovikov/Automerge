@@ -1,13 +1,13 @@
-﻿using AutomergerTests;
+﻿using System;
+using AutomergerTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace Automerger.Model.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class RemovalTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void RemovalTest()
         {
             MyAssert.Throws<ArgumentOutOfRangeException>(() => new Removal(-1, 1));

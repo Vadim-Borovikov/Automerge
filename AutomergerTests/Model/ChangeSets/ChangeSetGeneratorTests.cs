@@ -1,31 +1,32 @@
-﻿using AutomergerTests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using AutomergerTests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Automerger.Model.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ChangeSetGeneratorTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void GenerateTest()
         {
-            string[] source = new string[0];
-            string[] changed = new string[0];
+            var source = new string[0];
+            var changed = new string[0];
 
             MyAssert.Throws<ArgumentNullException>(() => ChangeSetGenerator.Generate(null, null));
-            MyAssert.Throws<ArgumentNullException>(
-                () => ChangeSetGenerator.Generate(null, changed));
-            MyAssert.Throws<ArgumentNullException>(
-                () => ChangeSetGenerator.Generate(source, null));
+            string[] changed1 = changed;
+            MyAssert.Throws<ArgumentNullException>(() => ChangeSetGenerator.Generate(null, changed1));
+            string[] source1 = source;
+            MyAssert.Throws<ArgumentNullException>(() => ChangeSetGenerator.Generate(source1, null));
 
-            var changes = ChangeSetGenerator.Generate(source, changed);
+            Dictionary<int, IMergableChange> changes = ChangeSetGenerator.Generate(source, changed);
             ChangeSetVerifier.Verify(changes, source.Length);
             Assert.IsTrue(changes.Count == 0);
 
             // Simple addition
-            changed = new string[] { "Test" };
+            changed = new[] { "Test" };
             changes = ChangeSetGenerator.Generate(source, changed);
             ChangeSetVerifier.Verify(changes, source.Length);
             Assert.IsTrue(changes.Count == 1);
@@ -37,7 +38,7 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(addition.NewContent.SequenceEqual(changed));
 
             // Simple removal
-            source = new string[] { "Test" };
+            source = new[] { "Test" };
             changed = new string[0];
             changes = ChangeSetGenerator.Generate(source, changed);
             ChangeSetVerifier.Verify(changes, source.Length);
@@ -49,7 +50,7 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(removal.AfterFinish == 1);
 
             // Simple replacement
-            changed = new string[] { "Test2" };
+            changed = new[] { "Test2" };
             changes = ChangeSetGenerator.Generate(source, changed);
             ChangeSetVerifier.Verify(changes, source.Length);
             Assert.IsTrue(changes.Count == 1);
@@ -61,15 +62,15 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(replacement.NewContent.SequenceEqual(changed));
 
             // Trimming
-            source = new string[] { "    Test" };
-            changed = new string[] { "Test\t\t" };
+            source = new[] { "    Test" };
+            changed = new[] { "Test\t\t" };
             changes = ChangeSetGenerator.Generate(source, changed);
             ChangeSetVerifier.Verify(changes, source.Length);
             Assert.IsTrue(changes.Count == 0);
 
             // Addition - removal - replacement
-            source = new string[] { "1", "2", "3", "4" };
-            changed = new string[] { "0", "1", "3", "5", "6" };
+            source = new[] { "1", "2", "3", "4" };
+            changed = new[] { "0", "1", "3", "5", "6" };
             changes = ChangeSetGenerator.Generate(source, changed);
             ChangeSetVerifier.Verify(changes, source.Length);
             Assert.IsTrue(changes.Count == 3);
@@ -78,7 +79,7 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(addition.Start == 0);
             Assert.IsTrue(addition.RemovedAmount == 0);
             Assert.IsTrue(addition.AfterFinish == 0);
-            Assert.IsTrue(addition.NewContent.SequenceEqual(new string[] { "0" }));
+            Assert.IsTrue(addition.NewContent.SequenceEqual(new[] { "0" }));
             removal = changes[1] as Removal;
             Assert.IsNotNull(removal);
             Assert.IsTrue(removal.Start == 1);
@@ -89,11 +90,11 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(replacement.Start == 3);
             Assert.IsTrue(replacement.RemovedAmount == 1);
             Assert.IsTrue(replacement.AfterFinish == 4);
-            Assert.IsTrue(replacement.NewContent.SequenceEqual(new string[] { "5", "6" }));
+            Assert.IsTrue(replacement.NewContent.SequenceEqual(new[] { "5", "6" }));
 
             // Removal - replacement - addition
-            source = new string[] { "1", "2", "3", "4" };
-            changed = new string[] { "2", "5", "4", "6", "7" };
+            source = new[] { "1", "2", "3", "4" };
+            changed = new[] { "2", "5", "4", "6", "7" };
             changes = ChangeSetGenerator.Generate(source, changed);
             ChangeSetVerifier.Verify(changes, source.Length);
             Assert.IsTrue(changes.Count == 3);
@@ -107,17 +108,17 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(replacement.Start == 2);
             Assert.IsTrue(replacement.RemovedAmount == 1);
             Assert.IsTrue(replacement.AfterFinish == 3);
-            Assert.IsTrue(replacement.NewContent.SequenceEqual(new string[] { "5" }));
+            Assert.IsTrue(replacement.NewContent.SequenceEqual(new[] { "5" }));
             addition = changes[4] as Addition;
             Assert.IsNotNull(addition);
             Assert.IsTrue(addition.Start == 4);
             Assert.IsTrue(addition.RemovedAmount == 0);
             Assert.IsTrue(addition.AfterFinish == 4);
-            Assert.IsTrue(addition.NewContent.SequenceEqual(new string[] { "6", "7" }));
+            Assert.IsTrue(addition.NewContent.SequenceEqual(new[] { "6", "7" }));
 
             // Replacement - addition - removal
-            source = new string[] { "1", "2", "3", "4" };
-            changed = new string[] { "5", "2", "6", "3" };
+            source = new[] { "1", "2", "3", "4" };
+            changed = new[] { "5", "2", "6", "3" };
             changes = ChangeSetGenerator.Generate(source, changed);
             ChangeSetVerifier.Verify(changes, source.Length);
             Assert.IsTrue(changes.Count == 3);
@@ -126,13 +127,13 @@ namespace Automerger.Model.Tests
             Assert.IsTrue(replacement.Start == 0);
             Assert.IsTrue(replacement.RemovedAmount == 1);
             Assert.IsTrue(replacement.AfterFinish == 1);
-            Assert.IsTrue(replacement.NewContent.SequenceEqual(new string[] { "5" }));
+            Assert.IsTrue(replacement.NewContent.SequenceEqual(new[] { "5" }));
             addition = changes[2] as Addition;
             Assert.IsNotNull(addition);
             Assert.IsTrue(addition.Start == 2);
             Assert.IsTrue(addition.RemovedAmount == 0);
             Assert.IsTrue(addition.AfterFinish == 2);
-            Assert.IsTrue(addition.NewContent.SequenceEqual(new string[] { "6" }));
+            Assert.IsTrue(addition.NewContent.SequenceEqual(new[] { "6" }));
             removal = changes[3] as Removal;
             Assert.IsNotNull(removal);
             Assert.IsTrue(removal.Start == 3);

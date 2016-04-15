@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AutomergerTests
 {
-    public static class MyAssert
+    internal static class MyAssert
     {
-        public static void Throws<T>(Action action) where T : Exception
+        internal static void Throws<T>(Action action) where T : Exception
         {
             try
             {
@@ -15,18 +15,6 @@ namespace AutomergerTests
             catch (Exception e)
             {
                 Assert.IsInstanceOfType(e, typeof(T));
-            }
-        }
-
-        public static void ThrowsNothing(Action action)
-        {
-            try
-            {
-                action();
-            }
-            catch
-            {
-                Assert.Fail();
             }
         }
     }

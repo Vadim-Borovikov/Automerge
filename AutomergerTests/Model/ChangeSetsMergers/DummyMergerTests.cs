@@ -1,28 +1,28 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Automerger.Model.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class DummyMergerTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void DummyMergeTest()
         {
             var merger = new DummyMerger();
             MergersCommonTests.CommonTest(merger);
 
-            var changes1 = new Dictionary<int, IMergableChange>()
+            var changes1 = new Dictionary<int, IMergableChange>
             {
-                { 1, new Addition(1, new string[] { "10" }) },
+                { 1, new Addition(1, new[] { "10" }) },
                 { 2, new Removal(2, 1) },
-                { 3, new Replacement(3, 2, new string[] { "20" }) }
+                { 3, new Replacement(3, 2, new[] { "20" }) }
             };
 
-            var changes2 = new Dictionary<int, IMergableChange>()
+            var changes2 = new Dictionary<int, IMergableChange>
             {
-                { 1, new Addition(1, new string[] { "30" }) },
-                { 3, new Replacement(3, 2, new string[] { "40" }) }
+                { 1, new Addition(1, new[] { "30" }) },
+                { 3, new Replacement(3, 2, new[] { "40" }) }
             };
 
             var source = new string[5];
