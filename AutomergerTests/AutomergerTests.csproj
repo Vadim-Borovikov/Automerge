@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AutomergerTests</RootNamespace>
     <AssemblyName>AutomergerTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -51,25 +51,23 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Model\ChangeSetsMergers\DummyMergerTests.cs" />
-    <Compile Include="Model\ChangeSetsMergers\MergersCommonTests.cs" />
-    <Compile Include="Model\ChangeSetsMergers\CustomMergerTests.cs" />
-    <Compile Include="Model\ChangeSets\ChangeSetVerifierTests.cs" />
-    <Compile Include="Model\Changes\AdditionTests.cs" />
-    <Compile Include="Model\ChangeSets\ChangeSetApplierTests.cs" />
-    <Compile Include="Model\ChangeSets\ChangeSetGeneratorTests.cs" />
-    <Compile Include="Model\Changes\ConflictTests.cs" />
-    <Compile Include="Model\Changes\RemovalTests.cs" />
-    <Compile Include="Model\Changes\ReplacementTests.cs" />
+    <Compile Include="ChangeSetsMergers\DummyMergerTests.cs" />
+    <Compile Include="ChangeSetsMergers\MergersCommonTests.cs" />
+    <Compile Include="ChangeSetsMergers\CustomMergerTests.cs" />
+    <Compile Include="ChangeSets\ChangeSetVerifierTests.cs" />
+    <Compile Include="Changes\AdditionTests.cs" />
+    <Compile Include="ChangeSets\ChangeSetApplierTests.cs" />
+    <Compile Include="ChangeSets\ChangeSetGeneratorTests.cs" />
+    <Compile Include="Changes\ConflictTests.cs" />
+    <Compile Include="Changes\RemovalTests.cs" />
+    <Compile Include="Changes\ReplacementTests.cs" />
     <Compile Include="MyAssert.cs" />
-    <Compile Include="Presenter\PresenterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\DummyView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AutomergerDemo\AutomergerDemo.csproj">
-      <Project>{214c80d2-a6b2-4459-a32f-63c448c26bae}</Project>
-      <Name>AutomergerDemo</Name>
+    <ProjectReference Include="..\Automerger\Automerger.csproj">
+      <Project>{3b47c269-3151-4c9f-9a02-d54dec7ea0e0}</Project>
+      <Name>Automerger</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

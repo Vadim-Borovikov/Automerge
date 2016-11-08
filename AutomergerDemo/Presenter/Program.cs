@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using Automerger.ChangeSetsMergers;
 
-namespace Automerger.Presenter
+namespace AutomergerDemo.Presenter
 {
     static class Program
     {
@@ -14,7 +15,7 @@ namespace Automerger.Presenter
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var merger = new Model.CustomMerger();
+            var merger = new CustomMerger();
             var form = new View.MainForm();
             var presenter = new Presenter(merger, form);
 

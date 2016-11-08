@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using Automerger.Changes;
+using Automerger.ChangeSets;
+using Automerger.ChangeSetsMergers;
 
-namespace Automerger.Presenter
+namespace AutomergerDemo.Presenter
 {
     public class Presenter
     {
@@ -12,7 +15,7 @@ namespace Automerger.Presenter
         //////////////////////////////////////////////////////////////////////////////////////
 
         #region Creation
-        public Presenter(Model.IChangeSetMerger merger, View.IView view)
+        public Presenter(IChangeSetMerger merger, View.IView view)
         {
             if ((merger == null) || (view == null))
             {
@@ -78,18 +81,18 @@ namespace Automerger.Presenter
 
         public void Merge()
         {
-            Dictionary<int, Model.IMergableChange> changes1 =
-                Model.ChangeSetGenerator.Generate(_source, _changed1);
-            Dictionary<int, Model.IMergableChange> changes2 =
-                Model.ChangeSetGenerator.Generate(_source, _changed2);
+            Dictionary<int, IMergableChange> changes1 =
+                ChangeSetGenerator.Generate(_source, _changed1);
+            Dictionary<int, IMergableChange> changes2 =
+                ChangeSetGenerator.Generate(_source, _changed2);
 
-            IDictionary<int, Model.IChange> merged = _merger.Merge(changes1, changes2, _source);
+            IDictionary<int, IChange> merged = _merger.Merge(changes1, changes2, _source);
 
-            ConflictsDetected = merged.Values.Any(c => c is Model.Conflict);
+            ConflictsDetected = merged.Values.Any(c => c is Conflict);
 
-            var changes = new ReadOnlyDictionary<int, Model.IChange>(merged);
+            var changes = new ReadOnlyDictionary<int, IChange>(merged);
 
-            _result = Model.ChangeSetApplier.Apply(changes, _source);
+            _result = ChangeSetApplier.Apply(changes, _source);
         }
 
         public bool TrySaveResult(string path)
@@ -124,7 +127,7 @@ namespace Automerger.Presenter
 
         #region Members
         private View.IView _view;
-        private Model.IChangeSetMerger _merger;
+        private IChangeSetMerger _merger;
         private string[] _source;
         private string[] _changed1;
         private string[] _changed2;
