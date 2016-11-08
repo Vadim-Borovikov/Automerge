@@ -76,7 +76,7 @@ namespace AutomergerDemo.Presenter
 
         public bool IsReadyForMerge()
         {
-            return ((_source != null) && (_changed1 != null) && (_changed2 != null));
+            return (_source != null) && (_changed1 != null) && (_changed2 != null);
         }
 
         public void Merge()

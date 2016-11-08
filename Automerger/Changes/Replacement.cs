@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Automerger.Changes
 {
+    /// <summary>
+    /// Replacement in a file
+    /// </summary>
+    /// <seealso cref="Automerger.Changes.Change" />
+    /// <seealso cref="Automerger.Changes.IMergableChange" />
     public class Replacement : Change, IMergableChange
     {
         public Replacement(int start, int removedAmount, IReadOnlyList<string> newContent)
