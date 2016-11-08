@@ -67,12 +67,11 @@
     <Compile Include="View\DummyView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Automerger\Automerger.csproj">
-      <Project>{214C80D2-A6B2-4459-A32F-63C448C26BAE}</Project>
-      <Name>Automerger</Name>
+    <ProjectReference Include="..\AutomergerDemo\AutomergerDemo.csproj">
+      <Project>{214c80d2-a6b2-4459-a32f-63c448c26bae}</Project>
+      <Name>AutomergerDemo</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
