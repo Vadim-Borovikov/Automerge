@@ -6,7 +6,7 @@ namespace Automerger.ChangeSets
 {
     public static class ChangeSetApplier
     {
-        public static string[] Apply(IReadOnlyDictionary<int, IChange> changes, string[] source)
+        public static string[] Apply(IReadOnlyDictionary<int, Change> changes, string[] source)
         {
             if ((source == null) || (changes == null))
             {
@@ -28,11 +28,11 @@ namespace Automerger.ChangeSets
             bool shouldAddSource;
             for (int i = 0; i <= source.Length; ++i)
             {
-                shouldAddSource = (i < source.Length);
+                shouldAddSource = i < source.Length;
 
                 if (changes.ContainsKey(i))
                 {
-                    IChange change = changes[i];
+                    Change change = changes[i];
                     result.AddRange(change.NewContent);
                     if (change.RemovedAmount > 0)
                     {

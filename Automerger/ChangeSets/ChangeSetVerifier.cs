@@ -33,7 +33,7 @@ namespace Automerger.ChangeSets
                     throw new ArgumentOutOfRangeException();
                 }
 
-                foreach (int key in changes.Keys.Where(k => (k > current)))
+                foreach (int key in changes.Keys.Where(k => k > current))
                 {
                     if (key < change.AfterFinish)
                     {
