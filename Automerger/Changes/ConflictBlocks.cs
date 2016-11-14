@@ -1,4 +1,4 @@
-﻿namespace Automerger.Changes
+﻿namespace Automerge.Changes
 {
     /// <summary>
     /// Blocks for the conflict

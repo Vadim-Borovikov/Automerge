@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace AutomergerDemo.View
+namespace AutomergeDemo.View
 {
     public partial class MainForm : Form, IView
     {

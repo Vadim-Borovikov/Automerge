@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Automerger.Changes;
-using Automerger.Changesets;
-using Automerger.ChangesetsMergers;
+using Automerge.Changes;
+using Automerge.Changesets;
+using Automerge.ChangesetsMergers;
 
-namespace Automerger
+namespace Automerge
 {
     /// <summary>
     /// Merger

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Automerger.Changes
+namespace Automerge.Changes
 {
     /// <summary>
     /// Change in a file
     /// </summary>
-    /// <seealso cref="Automerger.Changes.IChange" />
+    /// <seealso cref="IChange" />
     public abstract class Change : IChange
     {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

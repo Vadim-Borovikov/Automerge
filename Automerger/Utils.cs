@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Automerger
+namespace Automerge
 {
     /// <summary>
     /// Utility

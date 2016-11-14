@@ -1,4 +1,4 @@
-﻿namespace Automerger.Changesets
+﻿namespace Automerge.Changesets
 {
     /// <summary>
     /// Positions

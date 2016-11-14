@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Automerger.Changes
+namespace Automerge.Changes
 {
     /// <summary>
     /// Addition to a file
     /// </summary>
-    /// <seealso cref="Automerger.Changes.Change" />
-    /// <seealso cref="Automerger.Changes.IMergableChange" />
+    /// <seealso cref="Change" />
+    /// <seealso cref="IMergableChange" />
     internal class Addition : Change, IMergableChange
     {
         /// <summary>

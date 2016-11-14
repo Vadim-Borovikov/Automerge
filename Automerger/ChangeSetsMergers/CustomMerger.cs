@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Automerger.Changes;
-using Automerger.Changesets;
+using Automerge.Changes;
+using Automerge.Changesets;
 
-namespace Automerger.ChangesetsMergers
+namespace Automerge.ChangesetsMergers
 {
     /// <summary>
     /// Merge rules:

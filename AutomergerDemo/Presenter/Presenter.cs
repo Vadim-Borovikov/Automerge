@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using Automerger;
-using Automerger.Changes;
-using Automerger.Changesets;
-using Automerger.ChangesetsMergers;
-using AutomergerDemo.View;
+using Automerge;
+using Automerge.Changes;
+using Automerge.ChangesetsMergers;
+using AutomergeDemo.View;
 
-namespace AutomergerDemo.Presenter
+namespace AutomergeDemo.Presenter
 {
     public class Presenter
     {

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomergerTests", "AutomergerTests\AutomergerTests.csproj", "{FD399A15-A7E4-4616-A196-39A6977E8260}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomergeTests", "AutomergerTests\AutomergeTests.csproj", "{FD399A15-A7E4-4616-A196-39A6977E8260}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomergerDemo", "AutomergerDemo\AutomergerDemo.csproj", "{214C80D2-A6B2-4459-A32F-63C448C26BAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomergeDemo", "AutomergerDemo\AutomergeDemo.csproj", "{214C80D2-A6B2-4459-A32F-63C448C26BAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automerger", "Automerger\Automerger.csproj", "{3B47C269-3151-4C9F-9A02-D54DEC7EA0E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automerge", "Automerger\Automerge.csproj", "{3B47C269-3151-4C9F-9A02-D54DEC7EA0E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

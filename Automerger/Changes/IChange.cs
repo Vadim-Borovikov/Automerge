@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Automerger.Changes
+namespace Automerge.Changes
 {
     /// <summary>
     /// Change in a file

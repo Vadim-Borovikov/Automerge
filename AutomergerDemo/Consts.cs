@@ -1,6 +1,6 @@
-﻿using Automerger.Changes;
+﻿using Automerge.Changes;
 
-namespace AutomergerDemo
+namespace AutomergeDemo
 {
     /// <summary>
     /// Constants

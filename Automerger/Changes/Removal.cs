@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Automerger.Changes
+namespace Automerge.Changes
 {
     /// <summary>
     /// Removal from a file
     /// </summary>
-    /// <seealso cref="Automerger.Changes.Change" />
-    /// <seealso cref="Automerger.Changes.IMergableChange" />
+    /// <seealso cref="Change" />
+    /// <seealso cref="IMergableChange" />
     internal class Removal : Change, IMergableChange
     {
         /// <summary>

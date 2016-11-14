@@ -1,4 +1,4 @@
-﻿namespace AutomergerDemo.View
+﻿namespace AutomergeDemo.View
 {
     public interface IView
     {

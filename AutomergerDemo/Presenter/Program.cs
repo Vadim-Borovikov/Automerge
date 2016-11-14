@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using Automerger.ChangesetsMergers;
-using AutomergerDemo.View;
+using Automerge.ChangesetsMergers;
+using AutomergeDemo.View;
 
-namespace AutomergerDemo.Presenter
+namespace AutomergeDemo.Presenter
 {
     static class Program
     {

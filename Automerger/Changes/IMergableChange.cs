@@ -1,4 +1,4 @@
-﻿namespace Automerger.Changes
+﻿namespace Automerge.Changes
 {
     /// <summary>
     /// Change in a file that can be merged with another one

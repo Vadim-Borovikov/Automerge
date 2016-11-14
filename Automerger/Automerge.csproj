@@ -7,8 +7,8 @@
     <ProjectGuid>{3B47C269-3151-4C9F-9A02-D54DEC7EA0E0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Automerger</RootNamespace>
-    <AssemblyName>Automerger</AssemblyName>
+    <RootNamespace>Automerge</RootNamespace>
+    <AssemblyName>Automerge</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

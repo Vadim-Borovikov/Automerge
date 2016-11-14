@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Automerger.Changes
+namespace Automerge.Changes
 {
     public class Conflict : Change
     {
