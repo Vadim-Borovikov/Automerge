@@ -79,14 +79,8 @@ namespace Automerge.ChangesetsMergers
                     if (!collidingChange.Equals(currentChange))
                     {
                         IChange mergedChange = TryMerge(currentChange, collidingChange);
-                        if (mergedChange != null)
-                        {
-                            newChange = mergedChange;
-                        }
-                        else
-                        {
-                            newChange = new Conflict(currentChange, collidingChange, source, _conflictBlocks);
-                        }
+                        newChange =
+                            mergedChange ?? new Conflict(currentChange, collidingChange, source, _conflictBlocks);
                     }
                 }
 

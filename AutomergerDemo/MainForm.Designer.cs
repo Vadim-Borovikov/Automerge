@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace AutomergeDemo.View
+namespace AutomergeDemo
 {
     partial class MainForm
     {
