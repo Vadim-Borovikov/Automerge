@@ -51,16 +51,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ChangeSetsMergers\DummyMergerTests.cs" />
-    <Compile Include="ChangeSetsMergers\MergersCommonTests.cs" />
-    <Compile Include="ChangeSetsMergers\CustomMergerTests.cs" />
-    <Compile Include="ChangeSets\ChangeSetVerifierTests.cs" />
-    <Compile Include="Changes\AdditionTests.cs" />
-    <Compile Include="ChangeSets\ChangeSetApplierTests.cs" />
-    <Compile Include="ChangeSets\ChangeSetGeneratorTests.cs" />
-    <Compile Include="Changes\ConflictTests.cs" />
-    <Compile Include="Changes\RemovalTests.cs" />
-    <Compile Include="Changes\ReplacementTests.cs" />
     <Compile Include="MyAssert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

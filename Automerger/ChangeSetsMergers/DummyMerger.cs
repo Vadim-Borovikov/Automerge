@@ -1,32 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using Automerger.Changes;
-using Automerger.ChangeSets;
+using Automerger.Changesets;
 
-namespace Automerger.ChangeSetsMergers
+namespace Automerger.ChangesetsMergers
 {
     /// <summary>
     /// Merger that takes all from changes1 and nothing from changes2
     /// </summary>
-    public class DummyMerger : IChangeSetMerger
+    internal class DummyMerger : IChangesetMerger
     {
-        public IDictionary<int, IChange> Merge(IReadOnlyDictionary<int, IMergableChange> changes1,
-                                               IReadOnlyDictionary<int, IMergableChange> changes2,
-                                               string[] source)
+        /// <summary>
+        /// Merges the specified changesets.
+        /// </summary>
+        /// <param name="changeset1">The changeset1.</param>
+        /// <param name="changeset2">The changeset2.</param>
+        /// <param name="source">The source.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public Changeset<IChange> Merge(MergableChangeset changeset1, MergableChangeset changeset2,
+                                        IReadOnlyList<string> source)
         {
-            if ((changes1 == null) || (changes2 == null) || (source == null))
+            if ((changeset1 == null) || (changeset2 == null) || (source == null))
             {
                 throw new ArgumentNullException();
             }
 
-            ChangeSetVerifier.Verify(changes1, source.Length);
-            ChangeSetVerifier.Verify(changes2, source.Length);
+            changeset1.Verify(source.Count);
+            changeset2.Verify(source.Count);
 
-            var result = new Dictionary<int, IChange>();
+            var result = new Changeset<IChange>();
 
-            foreach (int key in changes1.Keys)
+            foreach (int key in changeset1.Keys)
             {
-                result.Add(key, changes1[key]);
+                result.Add(key, changeset1[key]);
             }
 
             return result;

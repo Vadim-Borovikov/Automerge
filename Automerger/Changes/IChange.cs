@@ -25,6 +25,6 @@ namespace Automerger.Changes
         /// <summary>
         /// New lines
         /// </summary>
-        IReadOnlyList<string> NewContent { get; }
+        IEnumerable<string> NewContent { get; }
     }
 }

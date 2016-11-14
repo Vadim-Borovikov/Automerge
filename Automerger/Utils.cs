@@ -1,30 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Automerger
 {
-    public static class Utils
+    /// <summary>
+    /// Utility
+    /// </summary>
+    internal static class Utils
     {
-        public static string[] GetSubArray(string[] source, int start, int afterFinish)
+        /// <summary>
+        /// Gets the sub array.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="afterFinish">The number of the line that is one past last.</param>
+        /// <returns></returns>
+        internal static IEnumerable<string> GetSubArray(IReadOnlyList<string> source, int start, int afterFinish)
         {
-            int length = afterFinish - start;
-            var result = new string[length];
-            Array.Copy(source, start, result, 0, length);
-            return result;
+            for (int i = start; i < afterFinish; ++i)
+            {
+                yield return source[i];
+            }
         }
 
-        public static Dictionary<T1, T2> ToDictionary<T1, T2>(IReadOnlyDictionary<T1, T2> dict)
+        /// <summary>
+        /// Tries the cast one of objects to T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="o1">The first object.</param>
+        /// <param name="o2">The second object.</param>
+        /// <returns></returns>
+        internal static T TryCastOneOf<T>(object o1, object o2)
+            where T : class
         {
-            return dict.ToDictionary(p => p.Key, p => p.Value);
-        }
-
-        public static void SwapDictionaries<T1, T2>(ref Dictionary<T1, T2> dict1,
-                                                    ref Dictionary<T1, T2> dict2)
-        {
-            Dictionary<T1, T2> temp = dict1;
-            dict1 = dict2;
-            dict2 = temp;
+            var result = o1 as T;
+            if (result != null)
+            {
+                return result;
+            }
+            return o2 as T;
         }
     }
 }

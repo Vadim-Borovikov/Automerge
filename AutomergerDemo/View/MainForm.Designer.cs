@@ -1,11 +1,14 @@
-﻿namespace AutomergerDemo.View
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace AutomergerDemo.View
 {
     partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -176,18 +179,18 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonLoadSource;
-        private System.Windows.Forms.Button buttonLoadVersion1;
-        private System.Windows.Forms.Button buttonLoadVersion2;
-        private System.Windows.Forms.Button buttonMerge;
-        private System.Windows.Forms.Label labelSource;
-        private System.Windows.Forms.Label labelChanged1;
-        private System.Windows.Forms.Label labelChanged2;
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog;
-        private System.Windows.Forms.Label labelMerge;
-        private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private Button buttonLoadSource;
+        private Button buttonLoadVersion1;
+        private Button buttonLoadVersion2;
+        private Button buttonMerge;
+        private Label labelSource;
+        private Label labelChanged1;
+        private Label labelChanged2;
+        private OpenFileDialog openFileDialog;
+        private SaveFileDialog saveFileDialog;
+        private Label labelMerge;
+        private StatusStrip statusStrip;
+        private ToolStripStatusLabel toolStripStatusLabel;
     }
 }
 

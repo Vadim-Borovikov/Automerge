@@ -7,7 +7,7 @@ namespace Automerger.Changes
     /// </summary>
     /// <seealso cref="Automerger.Changes.Change" />
     /// <seealso cref="Automerger.Changes.IMergableChange" />
-    public class Removal : Change, IMergableChange
+    internal class Removal : Change, IMergableChange
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Removal"/> class.
@@ -15,9 +15,9 @@ namespace Automerger.Changes
         /// <param name="start">The start.</param>
         /// <param name="amount">The amount.</param>
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
-        public Removal(int start, int amount)
+        internal Removal(int start, int amount)
         {
-            if ((start < 0) || (amount < 1))
+            if (amount < 1)
             {
                 throw new ArgumentOutOfRangeException();
             }

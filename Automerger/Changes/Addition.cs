@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Automerger.Changes
 {
@@ -8,7 +9,7 @@ namespace Automerger.Changes
     /// </summary>
     /// <seealso cref="Automerger.Changes.Change" />
     /// <seealso cref="Automerger.Changes.IMergableChange" />
-    public class Addition : Change, IMergableChange
+    internal class Addition : Change, IMergableChange
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Addition"/> class.
@@ -18,19 +19,14 @@ namespace Automerger.Changes
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="System.ArgumentException"></exception>
-        public Addition(int start, IReadOnlyList<string> newContent)
+        internal Addition(int start, IReadOnlyCollection<string> newContent)
         {
-            if (start < 0)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
             if (newContent == null)
             {
                 throw new ArgumentNullException();
             }
 
-            if (newContent.Count == 0)
+            if (!newContent.Any())
             {
                 throw new ArgumentException();
             }

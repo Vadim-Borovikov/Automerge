@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Automerger.Changes
@@ -9,8 +10,8 @@ namespace Automerger.Changes
     /// <seealso cref="Automerger.Changes.IChange" />
     public abstract class Change : IChange
     {
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         #region IChange implementation        
         /// <summary>
@@ -31,20 +32,25 @@ namespace Automerger.Changes
         /// <summary>
         /// New lines
         /// </summary>
-        public IReadOnlyList<string> NewContent { get; private set; }
+        public IEnumerable<string> NewContent { get; private set; }
         #endregion
 
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Change"/> class.
         /// </summary>
-        /// <param name="start">The start.</param>
+        /// <param name="start">The first line number.</param>
         /// <param name="removedAmount">The removed amount.</param>
         /// <param name="newContent">The new content.</param>
-        protected void Initialize(int start, int removedAmount, IReadOnlyList<string> newContent)
+        protected void Initialize(int start, int removedAmount, IEnumerable<string> newContent)
         {
+            if ((start < 0) || (removedAmount < 0))
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
             Start = start;
             RemovedAmount = removedAmount;
             NewContent = newContent;
@@ -95,7 +101,6 @@ namespace Automerger.Changes
             {
                 int hash = Start;
                 hash = hash * 11 + RemovedAmount;
-                hash = hash * 13 + NewContent.Count;
                 foreach (string c in NewContent)
                 {
                     hash = hash * 17 + c.GetHashCode();
@@ -104,7 +109,7 @@ namespace Automerger.Changes
             }
         }
 
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

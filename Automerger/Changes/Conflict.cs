@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Automerger.Changes
 {
     public class Conflict : Change
     {
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
-
-        #region Creation
-        public Conflict(IMergableChange change1, IMergableChange change2,
-                        string[] source)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Conflict"/> class.
+        /// </summary>
+        /// <param name="change1">The change1.</param>
+        /// <param name="change2">The change2.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="conflictBlocks">The conflict blocks.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// </exception>
+        /// <exception cref="System.ArgumentException"></exception>
+        internal Conflict(IMergableChange change1, IMergableChange change2, IReadOnlyList<string> source,
+                          ConflictBlocks conflictBlocks)
         {
             if ((change1 == null) || (change2 == null) || (source == null))
             {
@@ -19,13 +27,13 @@ namespace Automerger.Changes
 
             int start = Math.Min(change1.Start, change2.Start);
 
-            if ((start < 0) || (start > source.Length))
+            if (start > source.Count)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
             int afterFinish = Math.Max(change1.AfterFinish, change2.AfterFinish);
-            if (afterFinish > source.Length)
+            if (afterFinish > source.Count)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -40,45 +48,87 @@ namespace Automerger.Changes
 
             int removedAmount = afterFinish - start;
 
-            string[] originalBlock = Utils.GetSubArray(source, start, afterFinish);
-            string[] changedBlock1 = GetChangedBlock(source, start, afterFinish, change1);
-            string[] changedBlock2 = GetChangedBlock(source, start, afterFinish, change2);
+            IEnumerable<string> originalBlock = Utils.GetSubArray(source, start, afterFinish);
+            IEnumerable<string> changedBlock1 = GetChangedBlock(source, start, afterFinish, change1);
+            IEnumerable<string> changedBlock2 = GetChangedBlock(source, start, afterFinish, change2);
 
-            var newContent = new List<string>();
-            newContent.Add(Consts.CONFLICT_BLOCK_BEGIN);
-            newContent.Add(Consts.CONFLICT_BLOCK_SOURCE);
-            newContent.AddRange(originalBlock);
-            newContent.Add(Consts.CONFLICT_BLOCK_CHANGED1);
-            newContent.AddRange(changedBlock1);
-            newContent.Add(Consts.CONFLICT_BLOCK_CHANGED2);
-            newContent.AddRange(changedBlock2);
-            newContent.Add(Consts.CONFLICT_BLOCK_END);
+            IEnumerable<string> newContent =
+                GetNewContent(originalBlock, changedBlock1, changedBlock2, conflictBlocks);
 
             Initialize(start, removedAmount, newContent.ToArray());
         }
 
-        private string[] GetChangedBlock(string[] source, int start, int afterFinish,
-                                         IMergableChange change)
-        {
-            var result = new List<string>();
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        #region Helpers            
+        /// <summary>
+        /// Gets the changed block.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="afterFinish">The after finish.</param>
+        /// <param name="change">The change.</param>
+        /// <returns></returns>
+        private static IEnumerable<string> GetChangedBlock(IReadOnlyList<string> source, int start, int afterFinish,
+                                                           IChange change)
+        {
             for (int i = start; i < change.Start; ++i)
             {
-                result.Add(source[i]);
+                yield return source[i];
             }
 
-            result.AddRange(change.NewContent);
+            foreach (string line in change.NewContent)
+            {
+                yield return line;
+            }
 
             for (int i = change.Start + change.RemovedAmount; i < afterFinish; ++i)
             {
-                result.Add(source[i]);
+                yield return source[i];
+            }
+        }
+
+        /// <summary>
+        /// Gets the new content.
+        /// </summary>
+        /// <param name="originalBlock">The original block.</param>
+        /// <param name="changedBlock1">The changed block1.</param>
+        /// <param name="changedBlock2">The changed block2.</param>
+        /// <param name="conflictBlocks">The conflict blocks.</param>
+        /// <returns></returns>
+        private static IEnumerable<string> GetNewContent(IEnumerable<string> originalBlock,
+                                                         IEnumerable<string> changedBlock1,
+                                                         IEnumerable<string> changedBlock2,
+                                                         ConflictBlocks conflictBlocks)
+        {
+            yield return conflictBlocks.ConflictBlockBegin;
+            yield return conflictBlocks.ConflictBlockSource;
+
+            foreach (string line in originalBlock)
+            {
+                yield return line;
             }
 
-            return result.ToArray();
+            yield return conflictBlocks.ConflictBlockChanged1;
+
+            foreach (string line in changedBlock1)
+            {
+                yield return line;
+            }
+
+            yield return conflictBlocks.ConflictBlockChanged2;
+
+            foreach (string line in changedBlock2)
+            {
+                yield return line;
+            }
+
+            yield return conflictBlocks.ConflictBlockEnd;
         }
         #endregion
 
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

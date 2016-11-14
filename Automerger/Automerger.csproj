@@ -41,12 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeSetsMergers\CustomMerger.cs" />
-    <Compile Include="ChangeSetsMergers\DummyMerger.cs" />
-    <Compile Include="ChangeSetsMergers\IChangeSetMerger.cs" />
-    <Compile Include="ChangeSets\ChangeSetApplier.cs" />
-    <Compile Include="ChangeSets\ChangeSetGenerator.cs" />
-    <Compile Include="ChangeSets\ChangeSetVerifier.cs" />
+    <Compile Include="ChangesetsMergers\CustomMerger.cs" />
+    <Compile Include="ChangesetsMergers\DummyMerger.cs" />
+    <Compile Include="ChangesetsMergers\IChangesetMerger.cs" />
+    <Compile Include="Changesets\Changeset.cs" />
+    <Compile Include="Changesets\MergableChangeset.cs" />
+    <Compile Include="Changesets\Positions.cs" />
     <Compile Include="Changes\Addition.cs" />
     <Compile Include="Changes\Change.cs" />
     <Compile Include="Changes\Conflict.cs" />
@@ -54,9 +54,11 @@
     <Compile Include="Changes\IMergableChange.cs" />
     <Compile Include="Changes\Removal.cs" />
     <Compile Include="Changes\Replacement.cs" />
-    <Compile Include="Consts.cs" />
+    <Compile Include="Changes\ConflictBlocks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Merger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
