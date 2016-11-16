@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AutomergeTests
 {
-    internal static class MyAssert
+    internal static class ExceptionAssert
     {
         internal static void Throws<T>(Action action) where T : Exception
         {

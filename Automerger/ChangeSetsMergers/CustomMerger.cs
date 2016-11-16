@@ -56,6 +56,7 @@ namespace Automerge.ChangesetsMergers
 
             for (int line = 0; line <= source.Count; ++line)
             {
+                bool swapped = false;
                 if (!changeset1.ContainsKey(line))
                 {
                     if (!changeset2.ContainsKey(line))
@@ -63,7 +64,8 @@ namespace Automerge.ChangesetsMergers
                         continue;
                     }
 
-                    Swap(ref changeset1, ref changeset2);
+                    Utils.Swap(ref changeset1, ref changeset2);
+                    swapped = true;
                 }
 
                 IMergableChange currentChange = changeset1[line];
@@ -79,8 +81,18 @@ namespace Automerge.ChangesetsMergers
                     if (!collidingChange.Equals(currentChange))
                     {
                         IChange mergedChange = TryMerge(currentChange, collidingChange);
-                        newChange =
-                            mergedChange ?? new Conflict(currentChange, collidingChange, source, _conflictBlocks);
+                        if (mergedChange != null)
+                        {
+                            newChange = mergedChange;
+                        }
+                        else
+                        {
+                            if (swapped)
+                            {
+                                Utils.Swap(ref currentChange, ref collidingChange);
+                            }
+                            newChange = new Conflict(currentChange, collidingChange, source, _conflictBlocks);
+                        }
                     }
                 }
 
@@ -96,18 +108,6 @@ namespace Automerge.ChangesetsMergers
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         #region Helpers
-        /// <summary>
-        /// Swaps the specified MergableChangesets.
-        /// </summary>
-        /// <param name="changeset1">The changeset1.</param>
-        /// <param name="changeset2">The changeset2.</param>
-        private static void Swap(ref MergableChangeset changeset1, ref MergableChangeset changeset2)
-        {
-            MergableChangeset temp = changeset1;
-            changeset1 = changeset2;
-            changeset2 = temp;
-        }
-
         /// <summary>
         /// Finds the collision.
         /// </summary>

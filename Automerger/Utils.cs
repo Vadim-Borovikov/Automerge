@@ -23,6 +23,18 @@ namespace Automerge
         }
 
         /// <summary>
+        /// Swaps the specified objects.
+        /// </summary>
+        /// <param name="o1">The first object.</param>
+        /// <param name="o2">The second object.</param>
+        public static void Swap<T>(ref T o1, ref T o2)
+        {
+            T temp = o1;
+            o1 = o2;
+            o2 = temp;
+        }
+
+        /// <summary>
         /// Tries the cast one of objects to T
         /// </summary>
         /// <typeparam name="T"></typeparam>
