@@ -11,18 +11,21 @@ namespace AutomergeTests
     [TestClass]
     public class MergerTests
     {
+        private readonly ConflictBlocks _conflictBlocks;
+        private readonly CustomMerger _merger;
+
+        public MergerTests()
+        {
+            _conflictBlocks = Common.LoadBlocks();
+            _merger = new CustomMerger(_conflictBlocks);
+        }
+
         /// <summary>
         /// Merge method should throw ArgumentNullException correctly
         /// </summary>
         [TestMethod]
         public void TestNull()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] empty = { };
             ExceptionAssert.Throws<ArgumentNullException>(() => Merger.Merge(null, empty, empty, _merger));
             ExceptionAssert.Throws<ArgumentNullException>(() => Merger.Merge(empty, null, empty, _merger));
@@ -36,12 +39,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestIdenticalAdds()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0" };
             string[] add = { "0", "1" };
             TestMerge(source, add, add, add);
@@ -50,12 +47,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestIdenticalRemoves()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] remove = { "0" };
             TestMerge(source, remove, remove, remove);
@@ -64,12 +55,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestIdenticalReplaces()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] replace = { "0", "2" };
             TestMerge(source, replace, replace, replace);
@@ -82,12 +67,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestAddRemoveOnSame()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0" };
             string[] add = { "1", "0" };
             string[] remove = { };
@@ -98,185 +77,46 @@ namespace AutomergeTests
         [TestMethod]
         public void TestAddRemoveWithCollision()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] add = { "0", "2", "1" };
             string[] remove = { };
-            string[] result =
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                "0", "2", "1",
-                _conflictBlocks.ConflictBlockChanged2,
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, add, remove, result);
-            result = new[]
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                _conflictBlocks.ConflictBlockChanged2,
-                "0", "2", "1",
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, remove, add, result);
+            TestMergeWithConflict(source, add, remove);
         }
 
         [TestMethod]
         public void TestAddReplaceWithCollision()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] add = { "0", "2", "1" };
             string[] replace = { "3" };
-            string[] result =
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                "0", "2", "1",
-                _conflictBlocks.ConflictBlockChanged2,
-                "3",
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, add, replace, result);
-            result = new[]
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                "3",
-                _conflictBlocks.ConflictBlockChanged2,
-                "0", "2", "1",
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, replace, add, result);
+            TestMergeWithConflict(source, add, replace);
         }
 
         [TestMethod]
         public void TestRemovesWithCollision()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] remove1 = { };
             string[] remove2 = { "0" };
-            string[] result =
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                _conflictBlocks.ConflictBlockChanged2,
-                "0",
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, remove1, remove2, result);
-            result = new[]
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                "0",
-                _conflictBlocks.ConflictBlockChanged2,
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, remove2, remove1, result);
+            TestMergeWithConflict(source, remove1, remove2);
         }
 
         [TestMethod]
         public void TestRemoveReplaceWithCollision()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] remove = { };
             string[] replace = { "0", "2" };
-            string[] result =
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                _conflictBlocks.ConflictBlockChanged2,
-                "0", "2",
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, remove, replace, result);
-            result = new[]
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                "0", "2",
-                _conflictBlocks.ConflictBlockChanged2,
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, replace, remove, result);
+            TestMergeWithConflict(source, remove, replace);
         }
 
         [TestMethod]
         public void TestReplacesWithCollision()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] replace1 = { "2" };
             string[] replace2 = { "3" };
-            string[] result =
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                "2",
-                _conflictBlocks.ConflictBlockChanged2,
-                "3",
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, replace1, replace2, result);
-            result = new[]
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                "0", "1",
-                _conflictBlocks.ConflictBlockChanged1,
-                "3",
-                _conflictBlocks.ConflictBlockChanged2,
-                "2",
-                _conflictBlocks.ConflictBlockEnd
-            };
-            TestMerge(source, replace2, replace1, result);
+            TestMergeWithConflict(source, replace1, replace2);
         }
         #endregion
 
@@ -286,50 +126,22 @@ namespace AutomergeTests
         [TestMethod]
         public void TestAddsOnSame()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0" };
             string[] add1 = { "1", "0" };
             string[] add2 = { "2", "0" };
-            string[] result =
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                _conflictBlocks.ConflictBlockChanged1,
-                "1",
-                _conflictBlocks.ConflictBlockChanged2,
-                "2",
-                _conflictBlocks.ConflictBlockEnd,
-                "0"
-            };
-            TestMerge(source, add1, add2, result);
-            result = new []
-            {
-                _conflictBlocks.ConflictBlockBegin,
-                _conflictBlocks.ConflictBlockSource,
-                _conflictBlocks.ConflictBlockChanged1,
-                "2",
-                _conflictBlocks.ConflictBlockChanged2,
-                "1",
-                _conflictBlocks.ConflictBlockEnd,
-                "0"
-            };
-            TestMerge(source, add2, add1, result);
+
+            IEnumerable<string> conflict = GenerateConflictResult(new string[0], new[] { "1" }, new[] { "2" });
+            var result = new List<string>(conflict) { "0" };
+            TestMerge(source, add1, add2, result.ToArray());
+
+            conflict = GenerateConflictResult(new string[0], new[] { "2" }, new[] { "1" });
+            result = new List<string>(conflict) { "0" };
+            TestMerge(source, add2, add1, result.ToArray());
         }
 
         [TestMethod]
         public void TestAdds()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] add1 = { "2", "0", "1" };
             string[] add2 = { "0", "3", "1" };
@@ -340,12 +152,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestAddRemove()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] add = { "2", "0", "1" };
             string[] remove = { "0" };
@@ -356,12 +162,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestAddReplace()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] add = { "2", "0", "1" };
             string[] replace = { "0", "3" };
@@ -372,12 +172,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestRemoves()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] remove1 = { "1" };
             string[] remove2 = { "0" };
@@ -388,12 +182,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestRemoveReplace()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] remove = { "1" };
             string[] replace = { "0", "2" };
@@ -404,12 +192,6 @@ namespace AutomergeTests
         [TestMethod]
         public void TestReplaces()
         {
-            if (_merger == null)
-            {
-                _conflictBlocks = Common.LoadBlocks();
-                _merger = new CustomMerger(_conflictBlocks);
-            }
-
             string[] source = { "0", "1" };
             string[] replace1 = { "2", "1" };
             string[] replace2 = { "0", "3" };
@@ -419,6 +201,22 @@ namespace AutomergeTests
         #endregion
 
         #region helpers
+        /// <summary>
+        /// Tests the merge.
+        /// </summary>
+        /// <param name="source">The source content.</param>
+        /// <param name="changed1">The first changed content.</param>
+        /// <param name="changed2">The second changed content.</param>
+        /// <param name="expectedText">The expected text.</param>
+        private void TestMerge(IReadOnlyList<string> source, IReadOnlyList<string> changed1,
+                               IReadOnlyList<string> changed2, string[] expectedText)
+        {
+            Result result = Merger.Merge(source, changed1, changed2, _merger);
+            string[] actualText = result.Text.ToArray();
+            Assert.IsNotNull(actualText);
+            CollectionAssert.AreEqual(expectedText, actualText);
+        }
+
         /// <summary>
         /// Tests the merge.
         /// </summary>
@@ -438,23 +236,55 @@ namespace AutomergeTests
         }
 
         /// <summary>
-        /// Tests the merge.
+        /// Tests the merge with conflict.
         /// </summary>
-        /// <param name="source">The source content.</param>
-        /// <param name="changed1">The first changed content.</param>
-        /// <param name="changed2">The second changed content.</param>
-        /// <param name="expectedText">The expected text.</param>
-        private void TestMerge(IReadOnlyList<string> source, IReadOnlyList<string> changed1,
-                               IReadOnlyList<string> changed2, string[] expectedText)
+        /// <param name="source">The source.</param>
+        /// <param name="changed1">The changed1.</param>
+        /// <param name="changed2">The changed2.</param>
+        private void TestMergeWithConflict(IReadOnlyList<string> source, IReadOnlyList<string> changed1,
+                                           IReadOnlyList<string> changed2)
         {
-            Result result = Merger.Merge(source, changed1, changed2, _merger);
-            string[] actualText = result.Text.ToArray();
-            Assert.IsNotNull(actualText);
-            CollectionAssert.AreEqual(expectedText, actualText);
+            string[] result = GenerateConflictResult(source, changed1, changed2).ToArray();
+            TestMerge(source, changed1, changed2, result);
+            result = GenerateConflictResult(source, changed2, changed1).ToArray();
+            TestMerge(source, changed2, changed1, result);
+        }
+
+        /// <summary>
+        /// Generates the conflict result.
+        /// </summary>
+        /// <param name="originalBlock">The original block.</param>
+        /// <param name="changedBlock1">The changed block1.</param>
+        /// <param name="changedBlock2">The changed block2.</param>
+        /// <returns></returns>
+        private IEnumerable<string> GenerateConflictResult(IEnumerable<string> originalBlock,
+                                                           IEnumerable<string> changedBlock1,
+                                                           IEnumerable<string> changedBlock2)
+        {
+            yield return _conflictBlocks.ConflictBlockBegin;
+            yield return _conflictBlocks.ConflictBlockSource;
+
+            foreach (string line in originalBlock)
+            {
+                yield return line;
+            }
+
+            yield return _conflictBlocks.ConflictBlockChanged1;
+
+            foreach (string line in changedBlock1)
+            {
+                yield return line;
+            }
+
+            yield return _conflictBlocks.ConflictBlockChanged2;
+
+            foreach (string line in changedBlock2)
+            {
+                yield return line;
+            }
+
+            yield return _conflictBlocks.ConflictBlockEnd;
         }
         #endregion helpers
-
-        private ConflictBlocks _conflictBlocks;
-        private CustomMerger _merger;
     }
 }
