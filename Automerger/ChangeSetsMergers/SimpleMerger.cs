@@ -43,54 +43,12 @@ namespace Automerge.ChangesetsMergers
         public Changeset<IChange> Merge(MergableChangeset changeset1, MergableChangeset changeset2,
                                         IReadOnlyList<string> source)
         {
-            if ((changeset1 == null) || (changeset2 == null) || (source == null))
-            {
-                throw new ArgumentNullException();
-            }
-
-            changeset1.Verify(source.Count);
-            changeset2.Verify(source.Count);
-
             var result = new Changeset<IChange>();
-
-            bool swapped = false;
-            int[] lines = changeset1.Keys.Union(changeset2.Keys).OrderBy(l => l).ToArray();
-            foreach (int line in lines)
+            IEnumerable<IChange> changes = CollectChanges(changeset1, changeset2, source);
+            foreach (IChange change in changes)
             {
-                if (!changeset1.ContainsKey(line))
-                {
-                    if (!changeset2.ContainsKey(line))
-                    {
-                        continue;
-                    }
-
-                    Utils.Swap(ref changeset1, ref changeset2);
-                    swapped = !swapped;
-                }
-
-                IMergableChange currentChange = changeset1[line];
-                changeset1.Remove(line);
-
-                IChange newChange = currentChange;
-
-                IMergableChange collidingChange = FindCollision(changeset2, line, currentChange.AfterFinish);
-                if (collidingChange != null)
-                {
-                    changeset2.Remove(collidingChange.Start);
-
-                    if (!collidingChange.Equals(currentChange))
-                    {
-                        if (swapped)
-                        {
-                            Utils.Swap(ref currentChange, ref collidingChange);
-                        }
-                        newChange = ProcessCollision(source, currentChange, collidingChange);
-                    }
-                }
-
-                result.Add(line, newChange);
+                result.Add(change.Start, change);
             }
-
             return result;
         }
         #endregion
@@ -98,7 +56,7 @@ namespace Automerge.ChangesetsMergers
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        #region Helpers
+        #region Helpers            
         /// <summary>
         /// Processes the collision.
         /// </summary>
@@ -113,6 +71,54 @@ namespace Automerge.ChangesetsMergers
         }
 
         /// <summary>
+        /// Collects the changes.
+        /// </summary>
+        /// <param name="changeset1">The changeset1.</param>
+        /// <param name="changeset2">The changeset2.</param>
+        /// <param name="source">The source.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        private IEnumerable<IChange> CollectChanges(MergableChangeset changeset1, MergableChangeset changeset2,
+                                                    IReadOnlyList<string> source)
+        {
+            if ((changeset1 == null) || (changeset2 == null) || (source == null))
+            {
+                throw new ArgumentNullException();
+            }
+
+            changeset1.Verify(source.Count);
+            changeset2.Verify(source.Count);
+
+            IOrderedEnumerable<int> lines = changeset1.Keys.Union(changeset2.Keys).OrderBy(l => l);
+            var removedLines = new List<int>();
+            bool swapped = false;
+            foreach (int line in lines.Where(l => !removedLines.Contains(l)))
+            {
+                if (!changeset1.ContainsKey(line))
+                {
+                    Utils.Swap(ref changeset1, ref changeset2);
+                    swapped = !swapped;
+                }
+
+                IMergableChange currentChange = changeset1.Extract(line);
+                IMergableChange collidingChange = FindCollision(changeset2, line, currentChange.AfterFinish);
+
+                if ((collidingChange == null) || collidingChange.Equals(currentChange))
+                {
+                    yield return currentChange;
+                    continue;
+                }
+
+                removedLines.Add(collidingChange.Start);
+                if (swapped)
+                {
+                    Utils.Swap(ref currentChange, ref collidingChange);
+                }
+                yield return ProcessCollision(source, currentChange, collidingChange);
+            }
+        }
+
+        /// <summary>
         /// Finds the collision.
         /// </summary>
         /// <param name="changeset">The changeset.</param>
@@ -121,16 +127,16 @@ namespace Automerge.ChangesetsMergers
         /// <returns></returns>
         private static IMergableChange FindCollision(MergableChangeset changeset, int start, int afterFinish)
         {
-            if (changeset.Keys.Contains(start))
+            if (changeset.ContainsKey(start))
             {
-                return changeset[start];
+                return changeset.Extract(start);
             }
 
-            for (int i = start; i < afterFinish; ++i)
+            for (int i = start + 1; i < afterFinish; ++i)
             {
                 if (changeset.ContainsKey(i))
                 {
-                    return changeset[i];
+                    return changeset.Extract(i);
                 }
             }
             return null;

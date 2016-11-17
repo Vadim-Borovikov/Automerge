@@ -28,6 +28,18 @@ namespace Automerge.Changesets
             }
         }
 
+        /// <summary>
+        /// Extracts the value by specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
+        internal IMergableChange Extract(int key)
+        {
+            IMergableChange result = this[key];
+            Remove(key);
+            return result;
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
