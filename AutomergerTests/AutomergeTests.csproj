@@ -52,9 +52,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ChangesetsMergers\SimpleMergerTests.cs" />
     <Compile Include="ChangesetsMergers\CustomMergerTests.cs" />
     <Compile Include="ExceptionAssert.cs" />
-    <Compile Include="MergerTests.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangesetsMergers\SimpleMerger.cs" />
     <Compile Include="ChangesetsMergers\CustomMerger.cs" />
     <Compile Include="ChangesetsMergers\DummyMerger.cs" />
     <Compile Include="ChangesetsMergers\IChangesetMerger.cs" />

@@ -6,9 +6,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace AutomergeTests.ChangesetsMergers
 {
     [TestClass]
-    public class CustomMergerTests
+    public class SimpleMergerTests
     {
-        private static readonly CustomMerger Merger = new CustomMerger(Common.ConflictBlocks);
+        private static readonly SimpleMerger Merger = new SimpleMerger(Common.ConflictBlocks);
 
         /// <summary>
         /// Merge method should throw ArgumentNullException correctly
@@ -33,10 +33,8 @@ namespace AutomergeTests.ChangesetsMergers
             result.AddRange(conflict2);
             Common.TestMerge(source, removes1, removes2, result.ToArray(), Merger);
 
-            conflict1 =
-                Common.GenerateConflictResult(new[] { "0", "1" }, new string[0], new[] { "0" }).ToArray();
-            conflict2 =
-                Common.GenerateConflictResult(new[] { "3", "4" }, new string[0], new[] { "3" }).ToArray();
+            conflict1 = Common.GenerateConflictResult(new[] { "0", "1" }, new string[0], new[] { "0" }).ToArray();
+            conflict2 = Common.GenerateConflictResult(new[] { "3", "4" }, new string[0], new[] { "3" }).ToArray();
 
             result = new List<string>(conflict1) { "2" };
             result.AddRange(conflict2);
@@ -77,7 +75,6 @@ namespace AutomergeTests.ChangesetsMergers
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Two changes with collision should yield a conflict
-        // exception: an addition before line from which a removal starts yields a replacement
         #region with collision
         [TestMethod]
         public void TestAddRemoveOnSame()
@@ -85,8 +82,7 @@ namespace AutomergeTests.ChangesetsMergers
             string[] source = { "0" };
             string[] add = { "1", "0" };
             string[] remove = { };
-            string[] result = { "1" };
-            Common.TestMerge(source, add, remove, result, Merger, true);
+            Common.TestMergeWithConflict(source, add, remove, Merger);
         }
 
         [TestMethod]
