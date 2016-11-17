@@ -34,6 +34,29 @@ namespace AutomergeTests
             Merger.Merge(empty, empty, empty, _merger);
         }
 
+        // We need the changes first on 2nd file prior to 1st, and then the other way around
+        [TestMethod]
+        public void SwapsTest()
+        {
+            string[] source = { "0", "1", "2", "3", "4" };
+            string[] removes1 = { "0", "2", "3" };
+            string[] removes2 = { "2" };
+
+            string[] conflict1 = GenerateConflictResult(new[] { "0", "1" }, new[] { "0" }, new string[0]).ToArray();
+            string[] conflict2 = GenerateConflictResult(new[] { "3", "4" }, new[] { "3" }, new string[0]).ToArray();
+
+            var result = new List<string>(conflict1) { "2" };
+            result.AddRange(conflict2);
+            TestMerge(source, removes1, removes2, result.ToArray());
+
+            conflict1 = GenerateConflictResult(new[] { "0", "1" }, new string[0], new[] { "0" }).ToArray();
+            conflict2 = GenerateConflictResult(new[] { "3", "4" }, new string[0], new[] { "3" }).ToArray();
+
+            result = new List<string>(conflict1) { "2" };
+            result.AddRange(conflict2);
+            TestMerge(source, removes2, removes1, result.ToArray());
+        }
+
         // Two identical changes shouldn't yield a conflict.
         #region identical
         [TestMethod]

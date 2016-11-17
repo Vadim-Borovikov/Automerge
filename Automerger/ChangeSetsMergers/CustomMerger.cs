@@ -54,9 +54,9 @@ namespace Automerge.ChangesetsMergers
 
             var result = new Changeset<IChange>();
 
+            bool swapped = false;
             for (int line = 0; line <= source.Count; ++line)
             {
-                bool swapped = false;
                 if (!changeset1.ContainsKey(line))
                 {
                     if (!changeset2.ContainsKey(line))
@@ -65,7 +65,7 @@ namespace Automerge.ChangesetsMergers
                     }
 
                     Utils.Swap(ref changeset1, ref changeset2);
-                    swapped = true;
+                    swapped = !swapped;
                 }
 
                 IMergableChange currentChange = changeset1[line];
