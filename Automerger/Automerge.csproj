@@ -46,6 +46,7 @@
     <Compile Include="ChangesetsMergers\DummyMerger.cs" />
     <Compile Include="ChangesetsMergers\IChangesetMerger.cs" />
     <Compile Include="Changesets\Changeset.cs" />
+    <Compile Include="Changesets\CollidingChanges.cs" />
     <Compile Include="Changesets\MergableChangeset.cs" />
     <Compile Include="Changesets\Positions.cs" />
     <Compile Include="Changes\Addition.cs" />

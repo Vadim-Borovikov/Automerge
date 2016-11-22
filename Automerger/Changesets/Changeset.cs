@@ -14,6 +14,23 @@ namespace Automerge.Changesets
     public class Changeset<T> : Dictionary<int, T>
         where T : IChange
     {
+
+        /// <summary>
+        /// Gets the ordered keys.
+        /// </summary>
+        /// <value>
+        /// The ordered keys.
+        /// </value>
+        internal IEnumerable<int> OrderedKeys => Keys.OrderBy(k => k);
+
+        /// <summary>
+        /// Gets the ordered values.
+        /// </summary>
+        /// <value>
+        /// The ordered values.
+        /// </value>
+        internal IEnumerable<T> OrderedValues => OrderedKeys.Select(k => this[k]);
+
         /// <summary>
         /// Verifies the changeset with respect to specified source length.
         /// </summary>

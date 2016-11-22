@@ -16,6 +16,11 @@ namespace Automerge.Changesets
         /// <summary>
         /// Initializes a new instance of the <see cref="MergableChangeset"/> class.
         /// </summary>
+        public MergableChangeset() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MergableChangeset"/> class.
+        /// </summary>
         /// <param name="source">The source content.</param>
         /// <param name="changed">The changed content.</param>
         internal MergableChangeset(IReadOnlyList<string> source, IReadOnlyList<string> changed)
@@ -24,9 +29,15 @@ namespace Automerge.Changesets
 
             foreach (IMergableChange change in changes)
             {
-                Add(change.Start, change);
+                Add(change);
             }
         }
+
+        /// <summary>
+        /// Adds the specified change.
+        /// </summary>
+        /// <param name="change">The change.</param>
+        internal void Add(IMergableChange change) => Add(change.Start, change);
 
         /// <summary>
         /// Extracts the value by specified key.

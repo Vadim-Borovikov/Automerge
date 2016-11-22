@@ -56,7 +56,7 @@ namespace Automerge.ChangesetsMergers
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        #region Helpers            
+        #region Helpers
         /// <summary>
         /// Processes the collision.
         /// </summary>
@@ -68,6 +68,19 @@ namespace Automerge.ChangesetsMergers
                                                    IMergableChange change2)
         {
             return new Conflict(change1, change2, source, ConflictBlocks);
+        }
+
+        /// <summary>
+        /// Processes the collision.
+        /// </summary>
+        /// <param name="source">The source content.</param>
+        /// <param name="changeset1">The changeset1.</param>
+        /// <param name="changeset2">The changeset2.</param>
+        /// <returns></returns>
+        protected virtual IChange ProcessCollision(IReadOnlyList<string> source, MergableChangeset changeset1,
+                                                   MergableChangeset changeset2)
+        {
+            return new Conflict(source, changeset1, changeset2, ConflictBlocks);
         }
 
         /// <summary>
@@ -89,8 +102,8 @@ namespace Automerge.ChangesetsMergers
             changeset1.Verify(source.Count);
             changeset2.Verify(source.Count);
 
-            IOrderedEnumerable<int> lines = changeset1.Keys.Union(changeset2.Keys).OrderBy(l => l);
-            var removedLines = new List<int>();
+            var lines = new SortedSet<int>(changeset1.Keys.Union(changeset2.Keys));
+            var removedLines = new HashSet<int>();
             bool swapped = false;
             foreach (int line in lines.Where(l => !removedLines.Contains(l)))
             {
@@ -101,20 +114,68 @@ namespace Automerge.ChangesetsMergers
                 }
 
                 IMergableChange currentChange = changeset1.Extract(line);
-                IMergableChange collidingChange = FindCollision(changeset2, line, currentChange.AfterFinish);
+                CollidingChanges collidingChanges = FindCollidingChanges(currentChange, changeset1, changeset2);
 
-                if ((collidingChange == null) || collidingChange.Equals(currentChange))
+                if (collidingChanges.IsEmpty())
                 {
                     yield return currentChange;
                     continue;
                 }
 
-                removedLines.Add(collidingChange.Start);
-                if (swapped)
+                IMergableChange collidingChange = collidingChanges.TryGetSingle();
+                if (collidingChange != null)
                 {
-                    Utils.Swap(ref currentChange, ref collidingChange);
+                    removedLines.Add(collidingChange.Start);
+                    if (swapped)
+                    {
+                        Utils.Swap(ref currentChange, ref collidingChange);
+                    }
+                    yield return ProcessCollision(source, currentChange, collidingChange);
                 }
-                yield return ProcessCollision(source, currentChange, collidingChange);
+                else
+                {
+                    foreach (int l in collidingChanges.Keys)
+                    {
+                        removedLines.Add(l);
+                    }
+                    collidingChanges.ChangesFrom1.Add(currentChange);
+                    yield return swapped
+                        ? ProcessCollision(source, collidingChanges.ChangesFrom2, collidingChanges.ChangesFrom1)
+                        : ProcessCollision(source, collidingChanges.ChangesFrom1, collidingChanges.ChangesFrom2);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Finds the colliding changes.
+        /// </summary>
+        /// <param name="current">The current change.</param>
+        /// <param name="changeset1">The changeset1.</param>
+        /// <param name="changeset2">The changeset2.</param>
+        /// <returns></returns>
+        private static CollidingChanges FindCollidingChanges(IMergableChange current, MergableChangeset changeset1,
+                                                             MergableChangeset changeset2)
+        {
+            var collidingChangesFrom1 = new MergableChangeset();
+            var collidingChangesFrom2 = new MergableChangeset();
+            bool swapped = false;
+            while (true)
+            {
+                IMergableChange colliding = FindCollision(changeset2, current.Start, current.AfterFinish);
+                if ((colliding == null) || colliding.Equals(current))
+                {
+                    if (swapped)
+                    {
+                        Utils.Swap(ref collidingChangesFrom1, ref collidingChangesFrom2);
+                    }
+                    return new CollidingChanges(collidingChangesFrom1, collidingChangesFrom2);
+                }
+
+                collidingChangesFrom2.Add(colliding);
+                current = colliding;
+                Utils.Swap(ref changeset1, ref changeset2);
+                Utils.Swap(ref collidingChangesFrom1, ref collidingChangesFrom2);
+                swapped = !swapped;
             }
         }
 

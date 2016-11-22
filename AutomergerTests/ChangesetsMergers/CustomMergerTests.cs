@@ -43,6 +43,17 @@ namespace AutomergeTests.ChangesetsMergers
             Common.TestMerge(source, removes2, removes1, result.ToArray(), Merger);
         }
 
+
+        // What if one change collides with several others?
+        [TestMethod]
+        public void TestComplexCollision()
+        {
+            string[] source = { "0", "1", "2", "3", "4" };
+            string[] removes1 = { "2" };
+            string[] removes2 = { "0", "4" };
+            Common.TestMergeWithConflict(source, removes1, removes2, Merger);
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

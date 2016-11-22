@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Automerge.Changesets;
 
 namespace Automerge.Changes
 {
@@ -58,10 +59,49 @@ namespace Automerge.Changes
             Initialize(start, removedAmount, newContent.ToArray());
         }
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Conflict"/> class.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="changeset1">The changeset1.</param>
+        /// <param name="changeset2">The changeset2.</param>
+        /// <param name="conflictBlocks">The conflict blocks.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentOutOfRangeException"></exception>
+        internal Conflict(IReadOnlyList<string> source, MergableChangeset changeset1, MergableChangeset changeset2,
+                          ConflictBlocks conflictBlocks)
+        {
+            if ((source == null) || (changeset1 == null) || (changeset2 == null))
+            {
+                throw new ArgumentNullException();
+            }
+
+            var allChanges = new HashSet<IMergableChange>(changeset1.Values.Union(changeset2.Values));
+            int start = allChanges.Min(c => c.Start);
+            int afterFinish = allChanges.Max(c => c.AfterFinish);
+
+            if ((start > source.Count) || (afterFinish > source.Count))
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            int removedAmount = afterFinish - start;
+
+            IEnumerable<string> originalBlock = Utils.GetSubArray(source, start, afterFinish);
+            IEnumerable<string> changedBlock1 = GetChangedBlock(source, start, afterFinish, changeset1);
+            IEnumerable<string> changedBlock2 = GetChangedBlock(source, start, afterFinish, changeset2);
+
+            IEnumerable<string> newContent =
+                GetNewContent(originalBlock, changedBlock1, changedBlock2, conflictBlocks);
+
+            Initialize(start, removedAmount, newContent.ToArray());
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        #region Helpers            
+        #region Helpers
         /// <summary>
         /// Gets the changed block.
         /// </summary>
@@ -84,6 +124,32 @@ namespace Automerge.Changes
             }
 
             for (int i = change.Start + change.RemovedAmount; i < afterFinish; ++i)
+            {
+                yield return source[i];
+            }
+        }
+
+        /// <summary>
+        /// Gets the changed block.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="afterFinish">The after finish.</param>
+        /// <param name="changeset">The changeset.</param>
+        /// <returns></returns>
+        private static IEnumerable<string> GetChangedBlock(IReadOnlyList<string> source, int start, int afterFinish,
+                                                           MergableChangeset changeset)
+        {
+            int currentLine = start;
+            foreach (IMergableChange change in changeset.OrderedValues)
+            {
+                foreach (string line in GetChangedBlock(source, currentLine, change.AfterFinish, change))
+                {
+                    yield return line;
+                }
+                currentLine = change.AfterFinish;
+            }
+            for (int i = currentLine; i < afterFinish; ++i)
             {
                 yield return source[i];
             }
