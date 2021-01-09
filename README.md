@@ -1,4 +1,4 @@
-# Automerger
+# Automerge
 ## Descriprion:
 Merges base file's changes from two sources.
 ## Merge rules:
